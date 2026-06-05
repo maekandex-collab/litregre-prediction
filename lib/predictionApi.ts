@@ -14,6 +14,15 @@ export interface LoginUserBody {
   pin: string;
 }
 
+export interface ForgotPasswordBody {
+  phone_number: string;
+}
+
+export interface ResetPasswordBody {
+  phone_number: string;
+  pin: string;
+}
+
 /** Shape of a successful login response (exact fields depend on the backend). */
 export interface LoginSuccessData {
   access?: string;
@@ -83,5 +92,39 @@ export async function loginUser(
   });
 
   const data = (await res.json()) as LoginSuccessData;
+  return { ok: res.ok, status: res.status, data };
+}
+
+/**
+ * POST /api/prediction/forgot/password/
+ * Starts a PIN reset: backend sends a reset code/PIN to the phone via SMS.
+ */
+export async function forgotPassword(
+  body: ForgotPasswordBody
+): Promise<ApiResult<Record<string, unknown>>> {
+  const res = await fetch(`${BASE_URL}/api/prediction/forgot/password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  return { ok: res.ok, status: res.status, data };
+}
+
+/**
+ * POST /api/prediction/reset/password/
+ * Completes a PIN reset using the code/PIN the user received via SMS.
+ */
+export async function resetPassword(
+  body: ResetPasswordBody
+): Promise<ApiResult<Record<string, unknown>>> {
+  const res = await fetch(`${BASE_URL}/api/prediction/reset/password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   return { ok: res.ok, status: res.status, data };
 }
