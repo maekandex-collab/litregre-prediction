@@ -1,27 +1,20 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Trophy, Lock, Crown } from "lucide-react";
 import PredictionOfTheDay from "@/components/home/PredictionOfTheDay";
 import PastPredictionsList from "@/components/home/PastPredictionsList";
-import GeneralPredictionCard, {
-  type GeneralPrediction,
-} from "@/components/predictions/GeneralPredictionCard";
-import VIPPredictionCard, {
-  type VIPPrediction,
-} from "@/components/predictions/VIPPredictionCard";
+import HeroSwiper from "@/components/home/HeroSwiper";
+import StatsCounter from "@/components/home/StatsCounter";
+import GeneralPredictionCard from "@/components/predictions/GeneralPredictionCard";
+import VIPPredictionCard from "@/components/predictions/VIPPredictionCard";
 import Pagination from "@/components/ui/Pagination";
 import SearchBar from "@/components/ui/SearchBar";
-import { apiFetch } from "@/lib/apiFetch";
+import { useTodayPredictions, useVIPPredictions } from "@/hooks/usePredictions";
 
 type Tab = "general" | "vip";
-
-interface PaginatedResponse<T> {
-  items: T[];
-  count: number;
-}
 
 const PAGE_SIZE = 10;
 
@@ -69,133 +62,84 @@ function AuthLockScreen({ title, message, callbackUrl }: { title: string; messag
 export default function HomePage() {
   const { data: session, status: authStatus } = useSession();
   const [activeTab, setActiveTab] = useState<Tab>("general");
-
-  // ── Today's tips (General tab — login required) ────────────────────────────
-  const [todayItems, setTodayItems] = useState<GeneralPrediction[]>([]);
-  const [todayCount, setTodayCount] = useState(0);
   const [todayPage, setTodayPage] = useState(1);
-  const [todayLoading, setTodayLoading] = useState(false);
-  const [todayError, setTodayError] = useState("");
   const [todaySearch, setTodaySearch] = useState("");
-
-  // ── VIP predictions ────────────────────────────────────────────────────────
-  const [vipItems, setVipItems] = useState<VIPPrediction[]>([]);
-  const [vipCount, setVipCount] = useState(0);
   const [vipPage, setVipPage] = useState(1);
-  const [vipLoading, setVipLoading] = useState(false);
-  const [vipError, setVipError] = useState("");
   const [vipSearch, setVipSearch] = useState("");
-
-  const todayTotalPages = Math.ceil(todayCount / PAGE_SIZE) || 1;
-  const vipTotalPages = Math.ceil(vipCount / PAGE_SIZE) || 1;
 
   const isLoggedIn = authStatus === "authenticated" && !!session?.user;
 
-  // ── Fetch today's tips (login required) ───────────────────────────────────
-  const fetchToday = useCallback(async (page: number, search: string) => {
-    setTodayLoading(true);
-    setTodayError("");
-    try {
-      const qs = new URLSearchParams({
-        page: String(page),
-        page_size: String(PAGE_SIZE),
-      });
-      if (search) qs.set("search", search);
-      const res = await apiFetch(`/api/predictions/today?${qs.toString()}`);
-      if (res.status === 401) {
-        setTodayError("Session expired. Please sign in again.");
-        return;
-      }
-      const data = (await res.json()) as PaginatedResponse<GeneralPrediction>;
-      if (!res.ok) throw new Error("Failed to load today's tips.");
-      setTodayCount(data.count ?? 0);
-      setTodayItems(data.items ?? []);
-    } catch {
-      setTodayError("Could not load today's tips. Please try again.");
-    } finally {
-      setTodayLoading(false);
-    }
-  }, []);
+  const {
+    data: todayData,
+    isLoading: todayLoading,
+    isError: todayIsError,
+    refetch: refetchToday,
+  } = useTodayPredictions(todayPage, todaySearch, isLoggedIn && activeTab === "general");
 
-  // ── Fetch VIP ──────────────────────────────────────────────────────────────
-  const fetchVIP = useCallback(async (page: number, search: string) => {
-    setVipLoading(true);
-    setVipError("");
-    try {
-      const qs = new URLSearchParams({
-        page: String(page),
-        page_size: String(PAGE_SIZE),
-      });
-      if (search) qs.set("search", search);
-      const res = await apiFetch(`/api/predictions/vip?${qs.toString()}`);
-      const data = (await res.json()) as PaginatedResponse<VIPPrediction>;
-      if (res.status === 401) {
-        setVipError("Session expired. Please sign in again.");
-        return;
-      }
-      if (!res.ok) throw new Error("Failed to load VIP predictions.");
-      setVipCount(data.count ?? 0);
-      setVipItems(data.items ?? []);
-    } catch {
-      setVipError("Could not load VIP predictions. Please try again.");
-    } finally {
-      setVipLoading(false);
-    }
-  }, []);
+  const {
+    data: vipData,
+    isLoading: vipLoading,
+    isError: vipIsError,
+    refetch: refetchVip,
+  } = useVIPPredictions(vipPage, vipSearch, isLoggedIn && activeTab === "vip");
 
-  // Refetch today's tips when on General tab (login required) and search changes
-  useEffect(() => {
-    if (isLoggedIn && activeTab === "general") {
-      setTodayPage(1);
-      fetchToday(1, todaySearch);
-    }
-  }, [isLoggedIn, activeTab, fetchToday, todaySearch]);
+  const todayItems = todayData?.items ?? [];
+  const todayCount = todayData?.count ?? 0;
+  const todayTotalPages = Math.ceil(todayCount / PAGE_SIZE) || 1;
 
-  // Refetch VIP when on VIP tab and search changes
-  useEffect(() => {
-    if (isLoggedIn && activeTab === "vip") {
-      setVipPage(1);
-      fetchVIP(1, vipSearch);
-    }
-  }, [isLoggedIn, activeTab, fetchVIP, vipSearch]);
+  const vipItems = vipData?.items ?? [];
+  const vipCount = vipData?.count ?? 0;
+  const vipTotalPages = Math.ceil(vipCount / PAGE_SIZE) || 1;
+
+  function handleTodaySearch(q: string) {
+    setTodaySearch(q);
+    setTodayPage(1);
+  }
+
+  function handleVipSearch(q: string) {
+    setVipSearch(q);
+    setVipPage(1);
+  }
 
   function handleTodayPageChange(page: number) {
     setTodayPage(page);
-    fetchToday(page, todaySearch);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function handleVIPPageChange(page: number) {
     setVipPage(page);
-    fetchVIP(page, vipSearch);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4">
+      {/* Hero Carousel + Stats */}
+      <HeroSwiper />
+      <StatsCounter />
+
       <div className="flex flex-col lg:flex-row gap-4">
 
         {/* ── Main Feed ── */}
         <div className="flex-1 min-w-0 order-2 lg:order-1">
 
           {/* Tab bar */}
-          <div className="flex gap-2 mb-4 bg-base-100 border border-base-300 rounded-xl p-1.5">
+          <div className="flex gap-1 mb-4 bg-base-100 border border-base-300 rounded-xl p-1 shadow-sm">
             <button
               onClick={() => setActiveTab("general")}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-bold transition-all duration-300 ${
                 activeTab === "general"
-                  ? "bg-primary text-primary-content shadow-sm"
+                  ? "bg-gradient-to-r from-primary to-blue-600 text-white shadow-md"
                   : "text-base-content/60 hover:text-base-content hover:bg-base-200"
               }`}
             >
               <Trophy size={15} />
-              General
+              Today&apos;s Tips
               {!isLoggedIn && <Lock size={12} className="opacity-60" />}
               {isLoggedIn && todayCount > 0 && (
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
                     activeTab === "general"
-                      ? "bg-primary-content/20 text-primary-content"
+                      ? "bg-white/20 text-white"
                       : "bg-base-300 text-base-content/60"
                   }`}
                 >
@@ -206,9 +150,9 @@ export default function HomePage() {
 
             <button
               onClick={() => setActiveTab("vip")}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg text-sm font-bold transition-all duration-300 ${
                 activeTab === "vip"
-                  ? "bg-primary text-primary-content shadow-sm"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md"
                   : "text-base-content/60 hover:text-base-content hover:bg-base-200"
               }`}
             >
@@ -219,7 +163,7 @@ export default function HomePage() {
                 <span
                   className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
                     activeTab === "vip"
-                      ? "bg-primary-content/20 text-primary-content"
+                      ? "bg-white/20 text-white"
                       : "bg-base-300 text-base-content/60"
                   }`}
                 >
@@ -231,13 +175,16 @@ export default function HomePage() {
 
           {/* ── General Tab (today's tips — login required) ── */}
           {activeTab === "general" && (
-            <div className="bg-base-100 border border-base-300 rounded-xl overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-content">
-                <Trophy size={15} />
-                <span className="font-bold text-sm">Today&apos;s Tips</span>
+            <div className="bg-base-100 border border-base-300 rounded-xl overflow-hidden shadow-sm">
+              <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-primary via-blue-600 to-blue-700 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/20 blur-lg" />
+                </div>
+                <Trophy size={16} className="relative z-10" />
+                <span className="font-bold text-sm relative z-10">Today&apos;s Tips</span>
                 {isLoggedIn && todayCount > 0 && (
-                  <span className="text-primary-content/70 text-xs ml-auto">
-                    {todayCount} tips
+                  <span className="ml-auto relative z-10 bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {todayCount} matches
                   </span>
                 )}
               </div>
@@ -257,17 +204,17 @@ export default function HomePage() {
                   <div className="p-3 border-b border-base-300 bg-base-200/40">
                     <SearchBar
                       placeholder="Search today's tips by team or competition…"
-                      onSearch={setTodaySearch}
+                      onSearch={handleTodaySearch}
                     />
                   </div>
 
                   {todayLoading && <SkeletonRows count={6} />}
 
-                  {todayError && (
+                  {todayIsError && (
                     <div className="p-6 text-center">
-                      <p className="text-sm text-error mb-3">{todayError}</p>
+                      <p className="text-sm text-error mb-3">Could not load today&apos;s tips.</p>
                       <button
-                        onClick={() => fetchToday(todayPage, todaySearch)}
+                        onClick={() => refetchToday()}
                         className="btn btn-sm btn-outline btn-primary"
                       >
                         Retry
@@ -275,7 +222,7 @@ export default function HomePage() {
                     </div>
                   )}
 
-                  {!todayLoading && !todayError && todayItems.length === 0 && (
+                  {!todayLoading && !todayIsError && todayItems.length === 0 && (
                     <div className="py-12 text-center">
                       <p className="text-3xl mb-2">{todaySearch ? "🔍" : "⚽"}</p>
                       <p className="font-semibold text-sm">
@@ -294,7 +241,7 @@ export default function HomePage() {
                       <GeneralPredictionCard key={p.game_id} prediction={p} />
                     ))}
 
-                  {!todayError && todayItems.length > 0 && (
+                  {!todayIsError && todayItems.length > 0 && (
                     <div className="border-t border-base-300">
                       <Pagination
                         currentPage={todayPage}
@@ -311,13 +258,16 @@ export default function HomePage() {
 
           {/* ── VIP Tab ── */}
           {activeTab === "vip" && (
-            <div className="bg-base-100 border border-base-300 rounded-xl overflow-hidden">
-              <div className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-blue-700 text-primary-content">
-                <Crown size={15} />
-                <span className="font-bold text-sm">VIP Predictions</span>
+            <div className="bg-base-100 border border-base-300 rounded-xl overflow-hidden shadow-sm">
+              <div className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-amber-600 via-orange-500 to-amber-500 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute -right-4 -top-4 w-20 h-20 rounded-full bg-white/20 blur-lg" />
+                </div>
+                <Crown size={16} className="relative z-10" />
+                <span className="font-bold text-sm relative z-10">VIP Predictions</span>
                 {isLoggedIn && vipCount > 0 && (
-                  <span className="text-primary-content/70 text-xs ml-auto">
-                    {vipCount} tips
+                  <span className="ml-auto relative z-10 bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {vipCount} picks
                   </span>
                 )}
               </div>
@@ -334,21 +284,20 @@ export default function HomePage() {
 
               {isLoggedIn && (
                 <>
-                  {/* Search bar */}
                   <div className="p-3 border-b border-base-300 bg-base-200/40">
                     <SearchBar
                       placeholder="Search VIP picks by team or league…"
-                      onSearch={setVipSearch}
+                      onSearch={handleVipSearch}
                     />
                   </div>
 
                   {vipLoading && <SkeletonRows count={4} />}
 
-                  {vipError && (
+                  {vipIsError && (
                     <div className="p-6 text-center">
-                      <p className="text-sm text-error mb-3">{vipError}</p>
+                      <p className="text-sm text-error mb-3">Could not load VIP predictions.</p>
                       <button
-                        onClick={() => fetchVIP(vipPage, vipSearch)}
+                        onClick={() => refetchVip()}
                         className="btn btn-sm btn-outline btn-primary"
                       >
                         Retry
@@ -356,7 +305,7 @@ export default function HomePage() {
                     </div>
                   )}
 
-                  {!vipLoading && !vipError && vipItems.length === 0 && (
+                  {!vipLoading && !vipIsError && vipItems.length === 0 && (
                     <div className="py-12 text-center">
                       <p className="text-3xl mb-2">{vipSearch ? "🔍" : "👑"}</p>
                       <p className="font-semibold text-sm">
@@ -374,7 +323,7 @@ export default function HomePage() {
                     ))}
                   </div>
 
-                  {!vipError && vipItems.length > 0 && (
+                  {!vipIsError && vipItems.length > 0 && (
                     <div className="border-t border-base-300">
                       <Pagination
                         currentPage={vipPage}

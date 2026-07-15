@@ -128,3 +128,54 @@ export async function resetPassword(
   const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   return { ok: res.ok, status: res.status, data };
 }
+
+// ─── Password Management ─────────────────────────────────────────────────────
+
+export interface ChangePasswordBody {
+  old_pin: string;
+  new_pin: string;
+}
+
+export interface UpdatePasswordBody {
+  number: string;
+  pin: string;
+  confirm_pin: string;
+}
+
+/**
+ * POST /api/prediction/change/password/
+ * Changes password for an authenticated user (requires Bearer token).
+ */
+export async function changePassword(
+  body: ChangePasswordBody,
+  token: string
+): Promise<ApiResult<Record<string, unknown>>> {
+  const res = await fetch(`${BASE_URL}/api/prediction/change/password/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  return { ok: res.ok, status: res.status, data };
+}
+
+/**
+ * POST /api/prediction/update/password/
+ * Sets a new password using phone number (no auth required).
+ */
+export async function updatePassword(
+  body: UpdatePasswordBody
+): Promise<ApiResult<Record<string, unknown>>> {
+  const res = await fetch(`${BASE_URL}/api/prediction/update/password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  return { ok: res.ok, status: res.status, data };
+}

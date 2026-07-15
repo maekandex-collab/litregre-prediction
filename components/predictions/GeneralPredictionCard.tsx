@@ -15,27 +15,46 @@ export interface GeneralPrediction {
 }
 
 function ConfidenceBadge({ probability }: { probability: number }) {
-  // Backend returns whole numbers (e.g. 42 = 42%), not decimals
   const pct = probability > 1 ? Math.round(probability) : Math.round(probability * 100);
   const norm = probability > 1 ? probability / 100 : probability;
   const cls =
-    norm >= 0.7 ? "badge-success" : norm >= 0.5 ? "badge-warning" : "badge-error";
+    norm >= 0.7 ? "text-success" : norm >= 0.5 ? "text-warning" : "text-error";
   return (
-    <span className={`badge badge-sm font-bold ${cls}`}>{pct}%</span>
+    <span className={`text-xs font-bold ${cls}`}>{pct}%</span>
   );
 }
 
 function StatusBadge({ prediction }: { prediction: GeneralPrediction }) {
   if (!prediction.is_finished) {
-    return <span className="badge badge-sm badge-ghost text-[10px]">Pending</span>;
+    return (
+      <span className="flex items-center gap-1 text-[10px] font-semibold text-base-content/50">
+        <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />
+        Upcoming
+      </span>
+    );
   }
   if (prediction.is_prediction_correct === true) {
-    return <span className="badge badge-sm badge-success text-[10px]">Won ✓</span>;
+    return (
+      <span className="flex items-center gap-1 text-[10px] font-bold text-success">
+        <span className="w-1.5 h-1.5 rounded-full bg-success" />
+        Won
+      </span>
+    );
   }
   if (prediction.is_prediction_correct === false) {
-    return <span className="badge badge-sm badge-error text-[10px]">Lost ✗</span>;
+    return (
+      <span className="flex items-center gap-1 text-[10px] font-bold text-error">
+        <span className="w-1.5 h-1.5 rounded-full bg-error" />
+        Lost
+      </span>
+    );
   }
-  return <span className="badge badge-sm badge-ghost text-[10px]">Finished</span>;
+  return (
+    <span className="flex items-center gap-1 text-[10px] font-semibold text-base-content/40">
+      <span className="w-1.5 h-1.5 rounded-full bg-base-300" />
+      FT
+    </span>
+  );
 }
 
 interface Props {
@@ -45,58 +64,92 @@ interface Props {
 export default function GeneralPredictionCard({ prediction }: Props) {
   const kickoff = dayjs(prediction.date);
   const timeStr = kickoff.isValid() ? kickoff.format("HH:mm") : "--:--";
-  const dateStr = kickoff.isValid() ? kickoff.format("MMM D") : "";
+  const dateStr = kickoff.isValid() ? kickoff.format("ddd, MMM D") : "";
+
+  const isHighConfidence =
+    (prediction.prediction_probability > 1
+      ? prediction.prediction_probability / 100
+      : prediction.prediction_probability) >= 0.7;
 
   return (
-    <div className="border-b border-base-300 last:border-0 hover:bg-base-200/40 transition-colors">
-      {/* Top row: kickoff + teams horizontally + status */}
-      <div className="flex items-center gap-2 sm:gap-3 px-3 py-3">
-        {/* Date / time */}
-        <div className="w-14 flex-shrink-0 text-center">
-          <p className="text-[10px] text-base-content/50 leading-tight">{dateStr}</p>
-          <p className="text-xs font-semibold text-base-content/70 leading-tight">
-            {timeStr}
-          </p>
-        </div>
-
-        {/* Teams: home LEFT, away RIGHT */}
-        <div className="flex-1 min-w-0 flex items-center gap-1.5 sm:gap-2">
-          <p className="text-xs font-bold truncate flex-1 text-right">
-            {prediction.home_team}
-          </p>
-          <span className="text-[10px] font-bold text-base-content/30 flex-shrink-0">
-            vs
+    <div className="card-animate border-b border-base-300 last:border-0 hover:bg-gradient-to-r hover:from-primary/[0.02] hover:to-transparent transition-all duration-300 group">
+      <div className="px-4 py-3.5 sm:px-5">
+        {/* Top: date + status */}
+        <div className="flex items-center justify-between mb-2.5">
+          <span className="text-[10px] font-medium text-base-content/40 uppercase tracking-wider">
+            {dateStr} • {timeStr}
           </span>
-          <p className="text-xs font-bold truncate flex-1 text-left">
-            {prediction.away_team}
-          </p>
-        </div>
-
-        {/* Status */}
-        <div className="flex-shrink-0">
           <StatusBadge prediction={prediction} />
         </div>
-      </div>
 
-      {/* Bottom row: tip + confidence + (score if finished) */}
-      <div className="px-3 pb-2.5 flex items-center gap-2 pl-[68px] sm:pl-[72px]">
-        <span className="text-[10px] text-base-content/40 uppercase tracking-wide">
-          Tip
-        </span>
-        <span className="badge badge-primary badge-sm font-bold">
-          {prediction.prediction}
-        </span>
+        {/* Match: Home vs Away */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
+                <span className="text-[9px] font-black text-base-content/40 group-hover:text-primary transition-colors">
+                  {prediction.home_team.slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+              <span className="text-sm font-semibold truncate group-hover:text-primary transition-colors">
+                {prediction.home_team}
+              </span>
+            </div>
+          </div>
 
-        <span className="text-[10px] text-base-content/40 uppercase tracking-wide ml-1">
-          Conf
-        </span>
-        <ConfidenceBadge probability={prediction.prediction_probability} />
+          <div className="flex-shrink-0 w-8 text-center">
+            {prediction.result_score ? (
+              <span className="text-xs font-bold text-primary bg-primary/10 rounded px-1.5 py-0.5">
+                {prediction.result_score}
+              </span>
+            ) : (
+              <span className="text-[10px] font-bold text-base-content/25">VS</span>
+            )}
+          </div>
 
-        {prediction.result_score && (
-          <span className="ml-auto text-[11px] font-bold text-primary">
-            {prediction.result_score}
-          </span>
-        )}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 justify-end">
+              <span className="text-sm font-semibold truncate text-right group-hover:text-primary transition-colors">
+                {prediction.away_team}
+              </span>
+              <div className="w-7 h-7 rounded-full bg-base-200 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/10 transition-colors">
+                <span className="text-[9px] font-black text-base-content/40 group-hover:text-primary transition-colors">
+                  {prediction.away_team.slice(0, 2).toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom: Prediction info bar */}
+        <div className="flex items-center gap-3 bg-base-200/50 rounded-lg px-3 py-2">
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] text-base-content/40 uppercase font-medium">Tip</span>
+            <span className="bg-primary text-primary-content text-[11px] font-bold px-2 py-0.5 rounded-md">
+              {prediction.prediction}
+            </span>
+          </div>
+
+          <div className="w-px h-4 bg-base-300" />
+
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] text-base-content/40 uppercase font-medium">Conf</span>
+            <ConfidenceBadge probability={prediction.prediction_probability} />
+            {isHighConfidence && (
+              <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" title="High confidence" />
+            )}
+          </div>
+
+          {prediction.result_score && (
+            <>
+              <div className="w-px h-4 bg-base-300" />
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] text-base-content/40 uppercase font-medium">Score</span>
+                <span className="text-xs font-bold text-primary">{prediction.result_score}</span>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

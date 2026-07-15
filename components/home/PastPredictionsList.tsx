@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { History, ChevronRight } from "lucide-react";
 import dayjs from "dayjs";
-import { apiFetch } from "@/lib/apiFetch";
+import { useGeneralPredictions } from "@/hooks/usePredictions";
 
 interface GeneralItem {
   game_id: string;
@@ -16,11 +15,6 @@ interface GeneralItem {
   prediction_probability: number;
   is_prediction_correct: boolean | null;
   result_score: string | null;
-}
-
-interface ApiResponse {
-  items: GeneralItem[];
-  count: number;
 }
 
 function StatusDot({ item }: { item: GeneralItem }) {
@@ -37,21 +31,9 @@ function StatusDot({ item }: { item: GeneralItem }) {
 }
 
 export default function PastPredictionsList({ limit = 6 }: { limit?: number }) {
-  const [items, setItems] = useState<GeneralItem[]>([]);
-  const [count, setCount] = useState(0);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    apiFetch(`/api/predictions/general?page=1&page_size=${limit}`)
-      .then((r) => r.json())
-      .then((data: ApiResponse) => {
-        setItems(data.items ?? []);
-        setCount(data.count ?? 0);
-      })
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, [limit]);
+  const { data, isLoading: loading } = useGeneralPredictions(1, limit, true);
+  const items = (data?.items ?? []) as unknown as GeneralItem[];
+  const count = data?.count ?? 0;
 
   return (
     <div className="bg-base-100 border border-base-300 rounded-xl overflow-hidden shadow-sm">

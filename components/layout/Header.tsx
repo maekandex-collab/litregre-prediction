@@ -18,6 +18,7 @@ import {
   LogOut,
   Bell,
   Home,
+  Zap,
 } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 
@@ -40,6 +41,17 @@ const NAV_LINKS = [
     children: [
       { label: "Accumulator of the Day", href: "/predictions/accumulator-tips" },
       { label: "Bet of the Day", href: "/predictions/bet-of-the-day" },
+    ],
+  },
+  {
+    label: "Special",
+    href: "/predictions/special",
+    icon: <Zap size={16} />,
+    children: [
+      { label: "Special Bets", href: "/predictions/special" },
+      { label: "Goal Scorers", href: "/predictions/special?tab=goal-scorers" },
+      { label: "Cards & Corners", href: "/predictions/special?tab=cards-corners" },
+      { label: "Other Sports", href: "/predictions/special?tab=other-sports" },
     ],
   },
 ];

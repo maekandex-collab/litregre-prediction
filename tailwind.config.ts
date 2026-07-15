@@ -28,6 +28,51 @@ const config: Config = {
           600: "#16a34a",
         },
       },
+      animation: {
+        "fade-in-up": "fadeInUp 0.5s ease-out both",
+        "fade-in": "fadeIn 0.4s ease-out both",
+        shimmer: "shimmer 2s infinite linear",
+        "pulse-glow": "pulseGlow 2s ease-in-out infinite",
+        "slide-in-right": "slideInRight 0.4s ease-out both",
+        "slide-in-left": "slideInLeft 0.4s ease-out both",
+        "count-up": "countUp 0.6s ease-out both",
+        float: "float 3s ease-in-out infinite",
+        "spin-slow": "spin 4s linear infinite",
+      },
+      keyframes: {
+        fadeInUp: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        pulseGlow: {
+          "0%, 100%": { boxShadow: "0 0 5px rgba(59, 130, 246, 0.3)" },
+          "50%": { boxShadow: "0 0 20px rgba(59, 130, 246, 0.6)" },
+        },
+        slideInRight: {
+          "0%": { opacity: "0", transform: "translateX(30px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        slideInLeft: {
+          "0%": { opacity: "0", transform: "translateX(-30px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        countUp: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-6px)" },
+        },
+      },
     },
   },
   plugins: [require("daisyui")],

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Trophy, CalendarDays, Crown, Layers, Star, Lock } from "lucide-react";
+import { Trophy, CalendarDays, Crown, Layers, Star, Lock, Zap } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -58,6 +58,16 @@ const PREDICTION_HUBS = [
     color: "border-orange-400/20 hover:border-orange-400/50",
     bg: "bg-orange-50/50 dark:bg-orange-900/10",
   },
+  {
+    href: "/predictions/special",
+    icon: <Zap size={24} className="text-emerald-500" />,
+    label: "Special Predictions",
+    description: "Goal scorers, cards & corners, 1X2, BTTS, Over 2.5 goals, and other sports picks.",
+    badge: "New",
+    auth: true,
+    color: "border-emerald-400/20 hover:border-emerald-400/50",
+    bg: "bg-emerald-50/50 dark:bg-emerald-900/10",
+  },
 ];
 
 export default function PredictionsPage() {
@@ -80,7 +90,7 @@ export default function PredictionsPage() {
           <Link
             key={hub.href}
             href={hub.href}
-            className={`group flex flex-col gap-3 p-5 bg-base-100 border rounded-2xl transition-all shadow-sm hover:shadow-md ${hub.color}`}
+            className={`card-animate group flex flex-col gap-3 p-5 bg-base-100 border rounded-2xl transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 ${hub.color}`}
           >
             {/* Icon + badge row */}
             <div className="flex items-start justify-between">
