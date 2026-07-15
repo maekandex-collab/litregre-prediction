@@ -108,16 +108,18 @@ export function useSpecialPredictions(
   endpoint: string,
   params: Record<string, string>,
   page: number,
+  search: string,
   enabled: boolean
 ) {
   return useQuery({
-    queryKey: ["predictions", "special", endpoint, params, page],
+    queryKey: ["predictions", "special", endpoint, params, page, search],
     queryFn: async () => {
       const qs = new URLSearchParams({
         ...params,
         page: String(page),
         page_size: "10",
       });
+      if (search.trim()) qs.set("search", search.trim());
       const res = await apiFetch(`${endpoint}?${qs}`);
       if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data: SpecialPaginatedResponse = await res.json();

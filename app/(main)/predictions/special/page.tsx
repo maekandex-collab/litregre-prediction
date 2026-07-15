@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import {
@@ -9,6 +9,8 @@ import {
   Square,
   Dumbbell,
   Lock,
+  Search,
+  X,
 } from "lucide-react";
 import SpecialPredictionCard from "@/components/predictions/SpecialPredictionCard";
 import Pagination from "@/components/ui/Pagination";
@@ -125,6 +127,8 @@ export default function SpecialPredictionsPage() {
   const [cardsSub, setCardsSub] = useState<CardsSubTab>("card");
   const [otherSportsSub, setOtherSportsSub] = useState<OtherSportsSubTab>("basketball");
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
   const { endpoint, params } = getEndpointAndParams(mainTab, specialSub, cardsSub, otherSportsSub);
 
@@ -132,8 +136,21 @@ export default function SpecialPredictionsPage() {
     endpoint,
     params,
     page,
+    search,
     isLoggedIn
   );
+
+  const handleSearch = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    setSearch(searchInput);
+    setPage(1);
+  }, [searchInput]);
+
+  const clearSearch = useCallback(() => {
+    setSearchInput("");
+    setSearch("");
+    setPage(1);
+  }, []);
 
   const items = data?.items ?? [];
   const totalPages = data?.pages ?? 1;
@@ -141,6 +158,8 @@ export default function SpecialPredictionsPage() {
   function changeMainTab(tab: MainTab) {
     setMainTab(tab);
     setPage(1);
+    setSearch("");
+    setSearchInput("");
   }
 
   function changeSpecialSub(sub: SpecialSubTab) {
@@ -278,6 +297,41 @@ export default function SpecialPredictionsPage() {
         </div>
       )}
 
+      {/* Search */}
+      <form onSubmit={handleSearch} className="relative mb-5">
+        <div className="relative">
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base-content/40" />
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search by team name or league..."
+            className="input input-bordered w-full pl-10 pr-20 h-11 text-sm rounded-xl bg-base-100 border-base-300 focus:border-primary focus:outline-none"
+          />
+          {searchInput && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="absolute right-14 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-base-200 text-base-content/40 hover:text-base-content/70 transition-colors"
+            >
+              <X size={14} />
+            </button>
+          )}
+          <button
+            type="submit"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 btn btn-primary btn-sm h-8 min-h-0 rounded-lg text-xs px-3"
+          >
+            Search
+          </button>
+        </div>
+        {search && (
+          <p className="text-xs text-base-content/50 mt-2 px-1">
+            Showing results for &ldquo;<span className="font-medium text-base-content/70">{search}</span>&rdquo;
+            <button onClick={clearSearch} className="ml-2 text-primary hover:underline">Clear</button>
+          </p>
+        )}
+      </form>
+
       {/* Content */}
       {isLoading && <SkeletonCards count={5} />}
 
@@ -296,12 +350,21 @@ export default function SpecialPredictionsPage() {
       {!isLoading && !isError && items.length === 0 && (
         <div className="text-center py-16 bg-base-100 border border-base-300 rounded-xl">
           <div className="w-14 h-14 rounded-full bg-base-200 flex items-center justify-center mx-auto mb-4">
-            <Zap size={24} className="text-base-content/30" />
+            {search ? <Search size={24} className="text-base-content/30" /> : <Zap size={24} className="text-base-content/30" />}
           </div>
-          <p className="font-bold text-base-content/70 text-sm">No predictions available</p>
-          <p className="text-xs text-base-content/40 mt-1.5 max-w-xs mx-auto">
-            Check back later for fresh expert picks in this category.
+          <p className="font-bold text-base-content/70 text-sm">
+            {search ? `No results for "${search}"` : "No predictions available"}
           </p>
+          <p className="text-xs text-base-content/40 mt-1.5 max-w-xs mx-auto">
+            {search
+              ? "Try a different team name or league."
+              : "Check back later for fresh expert picks in this category."}
+          </p>
+          {search && (
+            <button onClick={clearSearch} className="btn btn-outline btn-sm mt-4 rounded-lg">
+              Clear Search
+            </button>
+          )}
         </div>
       )}
 
