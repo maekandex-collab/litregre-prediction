@@ -11,11 +11,14 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-# Public/build-time env can be injected by Coolify as build args if needed
+# Defaults required so `next build` prerender does not call new URL("") via NextAuth.
+# Coolify runtime env overrides these when the container starts.
 ARG PREDICTION_API_BASE_URL=https://mtn.lenhub.net
-ARG NEXTAUTH_URL
+ARG NEXTAUTH_URL=http://localhost:3000
+ARG NEXTAUTH_SECRET=build-time-placeholder-set-real-secret-in-coolify
 ENV PREDICTION_API_BASE_URL=$PREDICTION_API_BASE_URL
 ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 RUN npm run build
 
 FROM node:20-alpine AS runner

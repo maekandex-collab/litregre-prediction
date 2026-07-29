@@ -20,7 +20,10 @@ const beVietnamPro = Be_Vietnam_Pro({
   display: "swap",
 });
 
-const SITE_URL = "https://litregre-prediction.vercel.app";
+const SITE_URL =
+  process.env.NEXTAUTH_URL ||
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  "https://litregre-prediction.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
