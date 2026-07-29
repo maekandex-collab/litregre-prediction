@@ -10,6 +10,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Ensure public/ exists (git does not track empty dirs; Next may have no static assets)
+RUN mkdir -p public
 ENV NEXT_TELEMETRY_DISABLED=1
 # Defaults required so `next build` prerender does not call new URL("") via NextAuth.
 # Coolify runtime env overrides these when the container starts.
