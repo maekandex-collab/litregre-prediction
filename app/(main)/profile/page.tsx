@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import {
   User,
@@ -15,6 +15,7 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import { signOutSameOrigin } from "@/lib/authClient";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession({
@@ -230,7 +231,7 @@ export default function ProfilePage() {
       )}
 
       <button
-        onClick={() => signOut({ callbackUrl: "/" })}
+        onClick={() => signOutSameOrigin("/")}
         className="btn btn-error btn-outline btn-sm gap-2"
       >
         <LogOut size={14} /> Sign Out

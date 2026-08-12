@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { signOutSameOrigin } from "@/lib/authClient";
 
 let signingOut = false;
 
@@ -12,10 +12,10 @@ let signingOut = false;
 export function forceSignOutOnExpiry(callbackPath?: string) {
   if (signingOut) return;
   signingOut = true;
-  const callbackUrl = callbackPath
+  const path = callbackPath
     ? `/login?expired=1&callbackUrl=${encodeURIComponent(callbackPath)}`
     : "/login?expired=1";
-  signOut({ callbackUrl });
+  signOutSameOrigin(path);
 }
 
 /**

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import {
   Menu,
@@ -20,6 +20,7 @@ import {
   Crown,
 } from "lucide-react";
 import MobileMenu from "./MobileMenu";
+import { signOutSameOrigin } from "@/lib/authClient";
 
 const NAV_LINKS = [
   {
@@ -208,7 +209,7 @@ export default function Header() {
                     </li>
                     <li>
                       <button
-                        onClick={() => signOut({ callbackUrl: "/" })}
+                        onClick={() => signOutSameOrigin("/")}
                         className="flex items-center gap-2 text-error"
                       >
                         <LogOut size={15} /> Sign Out

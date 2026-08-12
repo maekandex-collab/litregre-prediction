@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { signOut } from "next-auth/react";
+import { signOutSameOrigin } from "@/lib/authClient";
 import type { Session } from "next-auth";
 import {
   X,
@@ -193,7 +193,7 @@ export default function MobileMenu({ open, onClose, navLinks, session }: Props) 
             <button
               onClick={() => {
                 onClose();
-                signOut({ callbackUrl: "/" });
+                signOutSameOrigin("/");
               }}
               className="flex items-center gap-2 py-2 text-sm text-error hover:text-error/80 transition-colors w-full"
             >
