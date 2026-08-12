@@ -13,6 +13,7 @@ import {
   User,
   LogOut,
   Home,
+  Crown,
 } from "lucide-react";
 
 interface NavChild {
@@ -119,7 +120,16 @@ export default function MobileMenu({ open, onClose, navLinks, session }: Props) 
             className="flex items-center gap-3 px-5 py-3 hover:bg-base-200 font-medium transition-colors"
           >
             <Home size={18} className="text-primary" />
-            Today's Predictions
+            Today&apos;s Predictions
+          </Link>
+
+          <Link
+            href="/predictions/vip"
+            onClick={onClose}
+            className="mx-4 mb-2 mt-1 flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-4 py-3 font-bold text-amber-950 shadow-sm"
+          >
+            <Crown size={18} />
+            Get VIP Prediction
           </Link>
 
           {navLinks.map((nav) =>

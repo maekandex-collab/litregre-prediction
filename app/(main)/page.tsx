@@ -8,6 +8,9 @@ import PredictionOfTheDay from "@/components/home/PredictionOfTheDay";
 import PastPredictionsList from "@/components/home/PastPredictionsList";
 import HeroSwiper from "@/components/home/HeroSwiper";
 import StatsCounter from "@/components/home/StatsCounter";
+import UssdBanner from "@/components/home/UssdBanner";
+import HomeDisclaimer from "@/components/home/HomeDisclaimer";
+import HomeFaq from "@/components/home/HomeFaq";
 import GeneralPredictionCard from "@/components/predictions/GeneralPredictionCard";
 import VIPPredictionCard from "@/components/predictions/VIPPredictionCard";
 import Pagination from "@/components/ui/Pagination";
@@ -113,8 +116,10 @@ export default function HomePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4">
-      {/* Hero Carousel + Stats */}
+      {/* Hero Carousel + USSD + Stats */}
       <HeroSwiper />
+      <UssdBanner />
+      <HomeDisclaimer />
       <StatsCounter />
 
       <div className="flex flex-col lg:flex-row gap-4">
@@ -345,6 +350,8 @@ export default function HomePage() {
           <PastPredictionsList limit={6} />
         </aside>
       </div>
+
+      <HomeFaq />
     </div>
   );
 }

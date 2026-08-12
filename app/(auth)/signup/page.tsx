@@ -16,9 +16,9 @@ import toast from "react-hot-toast";
 import { normalizeNigerianPhone } from "@/lib/phone";
 
 const BENEFITS = [
+  "Phone number comes from your invite link and stays locked",
   "Create your secure betting PIN in seconds",
-  "Phone-first sign up with quick verification",
-  "Link verification with your phone number attached",
+  "No need to type your number on first registration",
   "Faster login with phone number + PIN",
 ];
 
@@ -26,8 +26,10 @@ function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const hasInviteAccess = searchParams.has("invite");
+  const phoneFromQuery = searchParams.get("phone") ?? "";
 
   const [phone, setPhone] = useState("");
+  const [phoneLocked, setPhoneLocked] = useState(Boolean(phoneFromQuery.trim()));
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [showPin, setShowPin] = useState(false);
@@ -59,6 +61,37 @@ function SignupContent() {
       router.replace("/login?inviteRequired=1");
     }
   }, [hasInviteAccess, router]);
+
+  useEffect(() => {
+    if (phoneFromQuery) {
+      setPhone(normalizeNigerianPhone(phoneFromQuery));
+      setPhoneLocked(true);
+      return;
+    }
+
+    const invite = searchParams.get("invite");
+    if (!invite) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(
+          `/api/auth/invite-phone?invite=${encodeURIComponent(invite)}`
+        );
+        const data = (await res.json()) as { ok?: boolean; phone?: string };
+        if (!cancelled && data.ok && data.phone) {
+          setPhone(data.phone);
+          setPhoneLocked(true);
+        }
+      } catch {
+        // Invite API optional until backend ships; URL phone still works.
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [phoneFromQuery, searchParams]);
 
   if (!hasInviteAccess) {
     return null;
@@ -186,6 +219,11 @@ function SignupContent() {
             <div className="form-control">
               <label className="label py-1">
                 <span className="label-text text-sm font-medium">Phone number</span>
+                {phoneLocked && (
+                  <span className="label-text-alt text-[10px] font-semibold text-primary">
+                    Locked from invite link
+                  </span>
+                )}
               </label>
               <div className="relative">
                 <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" />
@@ -193,20 +231,29 @@ function SignupContent() {
                   type="tel"
                   placeholder="08012345678"
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => {
+                    if (!phoneLocked) setPhone(e.target.value);
+                  }}
                   required
-                  className="input input-bordered w-full pl-9 text-sm"
+                  readOnly={phoneLocked}
+                  className={`input input-bordered w-full pl-9 text-sm ${
+                    phoneLocked ? "bg-base-200 cursor-not-allowed opacity-90" : ""
+                  }`}
                   autoComplete="tel"
                 />
               </div>
-              {showPhoneHint && (
+              {phoneLocked ? (
+                <p className="mt-1 text-[11px] text-base-content/60">
+                  This number came from your registration link and cannot be changed.
+                </p>
+              ) : showPhoneHint ? (
                 <p className="mt-1 text-[11px] text-base-content/60">
                   We&apos;ll register you as{" "}
                   <span className="font-semibold text-primary">
                     {normalizedPhonePreview}
                   </span>
                 </p>
-              )}
+              ) : null}
             </div>
 
             {/* PIN */}

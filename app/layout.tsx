@@ -32,14 +32,15 @@ export const metadata: Metadata = {
     template: "%s | LitreGre Prediction",
   },
   description:
-    "Get free daily football predictions, expert tips and analysis for 50+ leagues. 1X2, BTTS, Over 2.5, goal scorers, VIP picks — all updated daily.",
+    "Get free daily football predictions, expert tips and analysis for 50+ leagues. 1X2, BTS, Over 1.5, Over 2.5, goal scorers, VIP picks — all updated daily.",
   keywords: [
     "football predictions",
     "soccer tips",
     "free predictions",
     "betting tips",
     "football analysis",
-    "BTTS tips",
+    "BTS tips",
+    "over 1.5 predictions",
     "over 2.5 predictions",
     "VIP football picks",
     "today football predictions",
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
     siteName: "LitreGre Prediction",
     title: "LitreGre Prediction – Free Daily Football Predictions & Tips",
     description:
-      "Expert football predictions updated daily. 1X2, BTTS, Over 2.5, goal scorers, cards & corners, and VIP tips for Premier League, Champions League, La Liga, Serie A and 50+ leagues.",
+      "Expert football predictions updated daily. 1X2, BTS, Over 1.5, Over 2.5, goal scorers, cards & corners, and VIP tips for Premier League, Champions League, La Liga, Serie A and 50+ leagues.",
     images: [
       {
         url: "/api/og",
@@ -65,7 +66,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LitreGre Prediction – Free Daily Football Predictions",
     description:
-      "Expert football predictions updated daily. 1X2, BTTS, Over 2.5, VIP tips for 50+ leagues.",
+      "Expert football predictions updated daily. 1X2, BTS, Over 1.5, Over 2.5, VIP tips for 50+ leagues.",
     images: ["/api/og"],
   },
   robots: { index: true, follow: true },

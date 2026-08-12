@@ -60,7 +60,7 @@ export default function StatsCounter() {
     { icon: <TrendingUp size={18} />, label: "Expert Analysis", description: "Data-driven picks", color: "bg-success", href: "/predictions/all" },
     { icon: <Target size={18} />, label: "Daily Tips", description: "Updated every day", color: "bg-primary", href: "/predictions/today" },
     { icon: <Crown size={18} />, label: "VIP Picks", description: "Premium selections", color: "bg-amber-500", href: "/predictions/vip" },
-    { icon: <Zap size={18} />, label: "Special Markets", description: "Multi-sport coverage", color: "bg-emerald-500", href: "/predictions/special" },
+    { icon: <Zap size={18} />, label: "Daily Special", description: "Multi-sport coverage", color: "bg-emerald-500", href: "/predictions/special" },
   ];
 
   return (

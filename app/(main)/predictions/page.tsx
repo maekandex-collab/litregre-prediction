@@ -61,8 +61,8 @@ const PREDICTION_HUBS = [
   {
     href: "/predictions/special",
     icon: <Zap size={24} className="text-emerald-500" />,
-    label: "Special Predictions",
-    description: "Goal scorers, cards & corners, 1X2, BTTS, Over 2.5 goals, and other sports picks.",
+    label: "Daily Special",
+    description: "1X2, BTS, Over 1.5, Over 2.5, basketball, tennis, goal scorers, and cards & corners.",
     badge: "New",
     auth: true,
     color: "border-emerald-400/20 hover:border-emerald-400/50",

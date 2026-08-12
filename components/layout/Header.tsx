@@ -7,7 +7,6 @@ import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import {
   Menu,
-  X,
   Sun,
   Moon,
   ChevronDown,
@@ -16,9 +15,9 @@ import {
   LogIn,
   User,
   LogOut,
-  Bell,
   Home,
   Zap,
+  Crown,
 } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 
@@ -30,7 +29,6 @@ const NAV_LINKS = [
     children: [
       { label: "All Predictions", href: "/predictions/all" },
       { label: "Today's Tips", href: "/predictions/today" },
-      { label: "VIP Predictions", href: "/predictions/vip" },
       { label: "Past Results", href: "/predictions/all?tab=past" },
     ],
   },
@@ -44,14 +42,15 @@ const NAV_LINKS = [
     ],
   },
   {
-    label: "Special",
+    label: "Daily Special",
     href: "/predictions/special",
     icon: <Zap size={16} />,
     children: [
-      { label: "Special Bets", href: "/predictions/special" },
+      { label: "Daily Special", href: "/predictions/special" },
       { label: "Goal Scorers", href: "/predictions/special?tab=goal-scorers" },
       { label: "Cards & Corners", href: "/predictions/special?tab=cards-corners" },
-      { label: "Other Sports", href: "/predictions/special?tab=other-sports" },
+      { label: "Basketball", href: "/predictions/special?tab=basketball" },
+      { label: "Tennis", href: "/predictions/special?tab=tennis" },
     ],
   },
 ];
@@ -167,6 +166,20 @@ export default function Header() {
 
             {/* Right side controls */}
             <div className="flex items-center gap-2">
+              {/* Get VIP Prediction — top bar CTA (moved out of bottom nav) */}
+              <Link
+                href="/predictions/vip"
+                className={`btn btn-sm gap-1.5 border-0 shadow-sm font-bold ${
+                  pathname.startsWith("/predictions/vip")
+                    ? "bg-amber-400 text-amber-950"
+                    : "bg-amber-300 hover:bg-amber-200 text-amber-950"
+                }`}
+              >
+                <Crown size={15} />
+                <span className="hidden sm:inline">Get VIP Prediction</span>
+                <span className="sm:hidden">VIP</span>
+              </Link>
+
               {/* Theme toggle */}
               <button
                 onClick={toggleTheme}

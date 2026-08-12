@@ -116,7 +116,7 @@ export async function GET(req: NextRequest) {
             marginTop: "40px",
           }}
         >
-          {["1X2", "BTTS", "Over 2.5", "VIP Tips", "Special Bets"].map((tag) => (
+          {["1X2", "BTS", "Over 1.5", "Over 2.5", "VIP Tips", "Daily Special"].map((tag) => (
             <div
               key={tag}
               style={{

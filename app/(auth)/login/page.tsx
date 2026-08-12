@@ -17,6 +17,7 @@ function LoginContent() {
   const inviteRequired = searchParams.get("inviteRequired") === "1";
   const invalidLink = searchParams.get("invalidLink") === "1";
   const expired = searchParams.get("expired") === "1";
+  const phoneLocked = Boolean(phoneFromQuery.trim());
 
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
@@ -117,6 +118,11 @@ function LoginContent() {
           <div className="form-control">
             <label className="label py-1">
               <span className="label-text text-sm font-medium">Phone number</span>
+              {phoneLocked && (
+                <span className="label-text-alt text-[10px] font-semibold text-primary">
+                  From your link
+                </span>
+              )}
             </label>
             <div className="relative">
               <Phone size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/40" />
@@ -124,20 +130,29 @@ function LoginContent() {
                 type="tel"
                 placeholder="08012345678"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  if (!phoneLocked) setPhone(e.target.value);
+                }}
                 required
-                className="input input-bordered w-full pl-9 text-sm"
+                readOnly={phoneLocked}
+                className={`input input-bordered w-full pl-9 text-sm ${
+                  phoneLocked ? "bg-base-200 cursor-not-allowed opacity-90" : ""
+                }`}
                 autoComplete="tel"
               />
             </div>
-            {showNormalizedHint && (
+            {phoneLocked ? (
+              <p className="mt-1 text-[11px] text-base-content/60">
+                Phone number is set from your link. Enter your PIN to continue.
+              </p>
+            ) : showNormalizedHint ? (
               <p className="mt-1 text-[11px] text-base-content/60">
                 We&apos;ll sign you in as{" "}
                 <span className="font-semibold text-primary">
                   {normalizedPreview}
                 </span>
               </p>
-            )}
+            ) : null}
           </div>
 
           {/* PIN */}
