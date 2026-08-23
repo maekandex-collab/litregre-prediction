@@ -123,7 +123,9 @@ function tokenScore(
 ): number {
   if (!aTokens.size || !bTokens.size) return 0;
   let inter = 0;
-  for (const t of aTokens) if (bTokens.has(t)) inter++;
+  aTokens.forEach((t) => {
+    if (bTokens.has(t)) inter++;
+  });
   const union = aTokens.size + bTokens.size - inter;
   const jaccard = inter / union;
   if (aNorm === bNorm) return 1;
@@ -290,7 +292,7 @@ export async function fetchSportyEventIndex(
     const thumbnails = await loadThumbnailCatalog();
     const map = new Map<string, SportyEvent>();
     mergeEventBlocks(map, thumbnails);
-    const events = indexEvents([...map.values()]);
+    const events = indexEvents(Array.from(map.values()));
     if (events.length) {
       indexCache = { at: Date.now(), events };
     }
