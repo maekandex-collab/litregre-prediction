@@ -42,6 +42,7 @@ let lastWarmupAt = 0;
 const WARMUP_CLIENT_COOLDOWN_MS = 90_000;
 
 function warmSportyBetIndex() {
+  if (typeof window === "undefined") return;
   const now = Date.now();
   if (now - lastWarmupAt < WARMUP_CLIENT_COOLDOWN_MS) return;
   lastWarmupAt = now;
@@ -50,10 +51,10 @@ function warmSportyBetIndex() {
       () => undefined
     );
   };
-  if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+  if ("requestIdleCallback" in window) {
     window.requestIdleCallback(() => run(), { timeout: 2500 });
   } else {
-    window.setTimeout(run, 400);
+    setTimeout(run, 400);
   }
 }
 
