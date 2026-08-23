@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
           justifyContent: "center",
           alignItems: "flex-start",
           padding: "80px",
-          background: "linear-gradient(135deg, #0f2744 0%, #1a3a6b 50%, #1d4ed8 100%)",
+          background: "linear-gradient(135deg, #071a1f 0%, #0f766e 55%, #14532d 100%)",
           fontFamily: "sans-serif",
           position: "relative",
         }}
@@ -116,7 +116,7 @@ export async function GET(req: NextRequest) {
             marginTop: "40px",
           }}
         >
-          {["1X2", "BTS", "Over 1.5", "Over 2.5", "VIP Tips", "Daily Special"].map((tag) => (
+          {["1X2", "BTS", "Over 2.5", "Halftime", "VIP Tips", "Daily Special"].map((tag) => (
             <div
               key={tag}
               style={{

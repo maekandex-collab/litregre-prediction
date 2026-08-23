@@ -13,28 +13,34 @@ export async function GET(req: Request) {
   }
 
   const { searchParams } = new URL(req.url);
-  const params = new URLSearchParams();
-
   const marketType = searchParams.get("market_type");
   const page = searchParams.get("page");
   const pageSize = searchParams.get("page_size");
   const search = searchParams.get("search");
 
-  if (marketType) params.set("market_type", marketType);
-  if (page) params.set("page", page);
-  if (pageSize) params.set("page_size", pageSize);
-  if (search) params.set("search", search);
+  const pageQs = new URLSearchParams();
+  if (page) pageQs.set("page", page);
+  if (pageSize) pageQs.set("page_size", pageSize);
+  if (search) pageQs.set("search", search);
 
   try {
-    const res = await fetch(
-      `${BASE_URL}/api/special/prediction/?${params.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${session.user.backendToken}`,
-        },
-        cache: "no-store",
-      }
-    );
+    // Over 1.5 lives at /api/special/prediction/over_15 (path),
+    // not ?market_type=over_15 (that returns "Invalid market type").
+    let upstream: string;
+    if (marketType === "over_15") {
+      const q = pageQs.toString();
+      upstream = `${BASE_URL}/api/special/prediction/over_15${q ? `?${q}` : ""}`;
+    } else {
+      if (marketType) pageQs.set("market_type", marketType);
+      upstream = `${BASE_URL}/api/special/prediction/?${pageQs.toString()}`;
+    }
+
+    const res = await fetch(upstream, {
+      headers: {
+        Authorization: `Bearer ${session.user.backendToken}`,
+      },
+      cache: "no-store",
+    });
     const data = await res.json();
     return NextResponse.json(data, { status: res.status });
   } catch {

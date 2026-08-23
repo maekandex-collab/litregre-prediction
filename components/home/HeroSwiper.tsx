@@ -29,7 +29,7 @@ const SLIDES: SlideData[] = [
     href: "/",
     icon: <Trophy size={24} />,
     bgIcon: <Trophy size={140} />,
-    gradient: "from-[#0f2744] via-[#1a3a6b] to-[#0d4a8a]",
+    gradient: "from-[#042f2e] via-[#0f766e] to-[#134e4a]",
     badges: ["Expert Analysis", "Daily Updates"],
   },
   {
@@ -40,19 +40,19 @@ const SLIDES: SlideData[] = [
     href: "/predictions/vip",
     icon: <Crown size={24} />,
     bgIcon: <Crown size={140} />,
-    gradient: "from-[#4a1c00] via-[#b45309] to-[#d97706]",
+    gradient: "from-[#422006] via-[#a16207] to-[#ca8a04]",
     badges: ["Members Only", "Premium Picks"],
   },
   {
     title: "Daily",
     highlight: "Special Markets",
-    subtitle: "Goal scorers, cards & corners, BTS, Over 1.5, Over 2.5, basketball and tennis in one hub.",
+    subtitle: "Goal scorers, cards & corners, BTTS, Over 2.5, Halftime, basketball and tennis in one hub.",
     cta: "Explore Daily Special",
     href: "/predictions/special",
     icon: <Zap size={24} />,
     bgIcon: <Zap size={140} />,
-    gradient: "from-[#064e3b] via-[#047857] to-[#0891b2]",
-    badges: ["BTS", "Over 1.5", "Basketball"],
+    gradient: "from-[#14532d] via-[#15803d] to-[#0f766e]",
+    badges: ["BTTS", "Over 2.5", "Basketball"],
   },
   {
     title: "Accumulator",
@@ -62,7 +62,7 @@ const SLIDES: SlideData[] = [
     href: "/predictions/accumulator-tips",
     icon: <TrendingUp size={24} />,
     bgIcon: <Target size={140} />,
-    gradient: "from-[#3b0764] via-[#7c3aed] to-[#c026d3]",
+    gradient: "from-[#0c4a6e] via-[#0369a1] to-[#0f766e]",
     badges: ["Combined Odds", "Best Pick"],
   },
 ];
@@ -135,20 +135,22 @@ export default function HeroSwiper() {
                   </div>
 
                   {/* Title */}
-                  <h2 className="text-white font-display font-bold text-xl sm:text-2xl lg:text-3xl mb-1 leading-tight">
+                  <h2 className="text-white font-display font-bold text-2xl sm:text-3xl lg:text-[2.15rem] mb-1.5 leading-[1.05] tracking-wide uppercase">
                     {slide.title}{" "}
-                    <span className="text-amber-300 inline-block bounce-soft-delayed">{slide.highlight}</span>
+                    <span className="text-lime-300 normal-case tracking-normal">
+                      {slide.highlight}
+                    </span>
                   </h2>
 
                   {/* Subtitle */}
-                  <p className="text-white/60 text-xs sm:text-sm mb-5 max-w-lg leading-relaxed line-clamp-2">
+                  <p className="text-white/65 text-sm mb-5 max-w-lg leading-relaxed line-clamp-2">
                     {slide.subtitle}
                   </p>
 
                   {/* CTA */}
                   <Link
                     href={slide.href}
-                    className="group inline-flex items-center gap-2 bg-white text-gray-900 text-xs sm:text-sm font-bold px-5 py-2.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-white/20 hover:scale-[1.03] active:scale-[0.98] cta-pulse"
+                    className="group inline-flex items-center gap-2 bg-white text-teal-950 text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:bg-lime-300"
                   >
                     {slide.cta}
                     <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />

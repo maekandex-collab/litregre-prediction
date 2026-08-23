@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import { signOutSameOrigin } from "@/lib/authClient";
+import BrandLogo from "@/components/brand/BrandLogo";
+import { BrandMark } from "@/components/brand/BrandLogo";
 
 const NAV_LINKS = [
   {
@@ -48,6 +50,11 @@ const NAV_LINKS = [
     icon: <Zap size={16} />,
     children: [
       { label: "Daily Special", href: "/predictions/special" },
+      { label: "1X2", href: "/predictions/special?tab=1x2" },
+      { label: "BTTS", href: "/predictions/special?tab=btts" },
+      { label: "Over 1.5", href: "/predictions/special?tab=over_15" },
+      { label: "Over 2.5", href: "/predictions/special?tab=over_25" },
+      { label: "Halftime", href: "/predictions/special?tab=halftime" },
       { label: "Goal Scorers", href: "/predictions/special?tab=goal-scorers" },
       { label: "Cards & Corners", href: "/predictions/special?tab=cards-corners" },
       { label: "Basketball", href: "/predictions/special?tab=basketball" },
@@ -82,26 +89,30 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-primary text-primary-content shadow-md sticky top-0 z-50">
+      <header className="sticky top-0 z-50 border-b border-teal-900/40 bg-[#071a1f]/95 backdrop-blur-xl text-white shadow-lg shadow-black/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between h-14">
+          <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
-                <Trophy size={18} className="text-white" />
-              </div>
-              <span className="font-display font-bold text-xl text-white hidden sm:block">
-                LitreGre<span className="text-amber-300"> Prediction</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="hidden sm:inline-flex">
+                <BrandLogo inverted size="md" />
               </span>
-              <span className="font-display font-bold text-xl text-white sm:hidden">LG</span>
-            </Link>
+              <Link href="/" className="sm:hidden inline-flex items-center gap-2">
+                <BrandMark size={30} />
+                <span className="font-display font-bold text-lg tracking-tight">
+                  LG
+                </span>
+              </Link>
+            </div>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-1" ref={dropdownRef}>
               <Link
                 href="/"
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === "/" ? "bg-white/20 text-white" : "hover:bg-white/10 text-white/80"
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
+                  pathname === "/"
+                    ? "bg-white/12 text-lime-300"
+                    : "hover:bg-white/8 text-white/75"
                 }`}
               >
                 <Home size={15} />
@@ -115,10 +126,10 @@ export default function Header() {
                       onClick={() =>
                         setActiveDropdown(activeDropdown === nav.label ? null : nav.label)
                       }
-                      className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
                         pathname.startsWith(nav.href)
-                          ? "bg-white/20 text-white"
-                          : "hover:bg-white/10 text-white/80"
+                          ? "bg-white/12 text-lime-300"
+                          : "hover:bg-white/8 text-white/75"
                       }`}
                     >
                       {nav.icon}
@@ -139,7 +150,9 @@ export default function Header() {
                             href={child.href}
                             onClick={() => setActiveDropdown(null)}
                             className={`block px-4 py-2.5 text-sm hover:bg-primary/10 hover:text-primary transition-colors ${
-                              pathname === child.href ? "bg-primary/10 text-primary font-medium" : ""
+                              pathname === child.href
+                                ? "bg-primary/10 text-primary font-medium"
+                                : ""
                             }`}
                           >
                             {child.label}
@@ -152,10 +165,10 @@ export default function Header() {
                   <Link
                     key={nav.label}
                     href={nav.href}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
                       pathname.startsWith(nav.href)
-                        ? "bg-white/20 text-white"
-                        : "hover:bg-white/10 text-white/80"
+                        ? "bg-white/12 text-lime-300"
+                        : "hover:bg-white/8 text-white/75"
                     }`}
                   >
                     {nav.icon}
@@ -167,21 +180,19 @@ export default function Header() {
 
             {/* Right side controls */}
             <div className="flex items-center gap-2">
-              {/* Get VIP Prediction — top bar CTA (moved out of bottom nav) */}
               <Link
                 href="/predictions/vip"
-                className={`btn btn-sm gap-1.5 border-0 shadow-sm font-bold ${
+                className={`btn btn-sm gap-1.5 border-0 shadow-md font-bold rounded-full ${
                   pathname.startsWith("/predictions/vip")
-                    ? "bg-amber-400 text-amber-950"
-                    : "bg-amber-300 hover:bg-amber-200 text-amber-950"
+                    ? "bg-lime-400 text-teal-950"
+                    : "bg-lime-300 hover:bg-lime-200 text-teal-950"
                 }`}
               >
                 <Crown size={15} />
-                <span className="hidden sm:inline">Get VIP Prediction</span>
+                <span className="hidden sm:inline">Get VIP</span>
                 <span className="sm:hidden">VIP</span>
               </Link>
 
-              {/* Theme toggle */}
               <button
                 onClick={toggleTheme}
                 className="btn btn-ghost btn-sm btn-circle text-white hover:bg-white/10"
@@ -190,18 +201,23 @@ export default function Header() {
                 {theme === "eaglelight" ? <Moon size={18} /> : <Sun size={18} />}
               </button>
 
-              {/* Auth */}
               {session?.user ? (
                 <div className="dropdown dropdown-end">
-                  <label tabIndex={0} className="btn btn-ghost btn-sm gap-2 text-white hover:bg-white/10">
-                    <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-bold">
+                  <label
+                    tabIndex={0}
+                    className="btn btn-ghost btn-sm gap-2 text-white hover:bg-white/10"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-teal-700 flex items-center justify-center text-lime-200 text-xs font-bold ring-2 ring-lime-400/40">
                       {session.user.name?.[0]?.toUpperCase() ?? "U"}
                     </div>
                     <span className="hidden sm:inline text-sm font-medium max-w-[100px] truncate">
                       {session.user.name}
                     </span>
                   </label>
-                  <ul tabIndex={0} className="dropdown-content menu menu-sm bg-base-100 border border-base-300 rounded-xl shadow-xl w-48 mt-1 z-50 text-base-content">
+                  <ul
+                    tabIndex={0}
+                    className="dropdown-content menu menu-sm bg-base-100 border border-base-300 rounded-xl shadow-xl w-48 mt-1 z-50 text-base-content"
+                  >
                     <li>
                       <Link href="/profile" className="flex items-center gap-2">
                         <User size={15} /> My Profile
@@ -219,14 +235,16 @@ export default function Header() {
                 </div>
               ) : (
                 <div className="hidden sm:flex items-center gap-2">
-                  <Link href="/login" className="btn btn-ghost btn-sm gap-1.5 text-white hover:bg-white/10">
+                  <Link
+                    href="/login"
+                    className="btn btn-ghost btn-sm gap-1.5 text-white hover:bg-white/10"
+                  >
                     <LogIn size={15} />
                     Login
                   </Link>
                 </div>
               )}
 
-              {/* Mobile hamburger */}
               <button
                 className="btn btn-ghost btn-sm btn-circle lg:hidden text-white hover:bg-white/10"
                 onClick={() => setMobileOpen(true)}
@@ -239,7 +257,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       <MobileMenu
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}

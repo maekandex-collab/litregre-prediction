@@ -3,8 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --font-inter: "Inter", sans-serif;
-  --font-be-vietnam: "Be Vietnam Pro", sans-serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Segoe UI", system-ui, sans-serif;
+  --surface-glow: radial-gradient(
+    ellipse 80% 50% at 50% -20%,
+    rgba(15, 118, 110, 0.1),
+    transparent 60%
+  );
 }
 
 html {
@@ -13,6 +18,20 @@ html {
 
 body {
   min-height: 100vh;
+  background-image: var(--surface-glow);
+  background-attachment: fixed;
+}
+
+.potd-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+.potd-hero {
+  animation: fadeInUp 0.55s ease-out both;
 }
 
 /* ─── Custom scrollbar ─────────────────────────── */

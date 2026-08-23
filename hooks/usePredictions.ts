@@ -122,9 +122,36 @@ export function useSpecialPredictions(
       if (search.trim()) qs.set("search", search.trim());
       const res = await apiFetch(`${endpoint}?${qs}`);
       if (!res.ok) throw new Error(`API error: ${res.status}`);
-      const data: SpecialPaginatedResponse = await res.json();
-      const items = data.result ?? data.results ?? [];
-      return { items, count: data.count ?? 0, pages: data.pages ?? 1 };
+      const data: SpecialPaginatedResponse & {
+        data?: SpecialPrediction[];
+        items?: SpecialPrediction[];
+        message?: string;
+        market_type?: string[];
+      } = await res.json();
+
+      if (data?.message === "Invalid market type") {
+        throw new Error(
+          `Invalid market type. Allowed: ${(data.market_type ?? []).join(", ")}`
+        );
+      }
+
+      const items =
+        data.result ??
+        data.results ??
+        data.data ??
+        data.items ??
+        (Array.isArray(data) ? data : []);
+      const list = Array.isArray(items) ? items : [];
+      // Some special endpoints return count:0 / pages:0 even when results[] is populated
+      const count =
+        typeof data.count === "number" && data.count > 0
+          ? data.count
+          : list.length;
+      const pages =
+        typeof data.pages === "number" && data.pages > 0
+          ? data.pages
+          : Math.max(1, Math.ceil(count / 10) || 1);
+      return { items: list, count, pages };
     },
     enabled,
     placeholderData: keepPreviousData,

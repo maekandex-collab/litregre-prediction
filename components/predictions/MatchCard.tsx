@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { Match } from "@/types";
 import { ChevronRight } from "lucide-react";
+import { buildSimulationHref } from "@/lib/simulation";
 
 interface Props {
   match: Match;
@@ -32,6 +33,12 @@ function getOddsForPrediction(match: Match): number {
 
 export default function MatchCard({ match }: Props) {
   const odds = getOddsForPrediction(match);
+  const simulateHref = buildSimulationHref({
+    home: match.homeTeam.name,
+    away: match.awayTeam.name,
+    homeLogo: match.homeTeam.logo,
+    awayLogo: match.awayTeam.logo,
+  });
 
   return (
     <div className="border-b border-base-300 last:border-0">
@@ -66,21 +73,21 @@ export default function MatchCard({ match }: Props) {
           <p className="text-xs font-bold text-base-content">{odds}</p>
         </div>
 
-        {/* Bet Now button */}
+        {/* Simulate */}
         <Link
-          href={`/predictions/match/${match.slug}`}
+          href={simulateHref}
           className="flex-shrink-0 btn btn-primary btn-xs rounded-full px-3 text-[10px]"
         >
-          Bet Now
+          Simulate
         </Link>
       </div>
 
       {/* View Prediction link */}
       <Link
-        href={`/predictions/match/${match.slug}`}
+        href={simulateHref}
         className="flex items-center justify-center gap-1 py-1 text-[10px] text-primary hover:underline bg-primary/5"
       >
-        View Prediction <ChevronRight size={10} />
+        Play simulation <ChevronRight size={10} />
       </Link>
     </div>
   );

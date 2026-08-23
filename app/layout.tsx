@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
-import { Inter, Be_Vietnam_Pro } from "next/font/google";
+import { Source_Sans_3, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 
-const inter = Inter({
+const sourceSans = Source_Sans_3({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
   display: "swap",
 });
 
-const beVietnamPro = Be_Vietnam_Pro({
+const barlowCondensed = Barlow_Condensed({
   subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-be-vietnam",
+  weight: ["600", "700"],
+  variable: "--font-display",
   display: "swap",
 });
 
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s | LitreGre Prediction",
   },
   description:
-    "Get free daily football predictions, expert tips and analysis for 50+ leagues. 1X2, BTS, Over 1.5, Over 2.5, goal scorers, VIP picks — all updated daily.",
+    "Get free daily football predictions, expert tips and analysis for 50+ leagues. 1X2, BTS, Over 2.5, Halftime, goal scorers, VIP picks — all updated daily.",
   keywords: [
     "football predictions",
     "soccer tips",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     siteName: "LitreGre Prediction",
     title: "LitreGre Prediction – Free Daily Football Predictions & Tips",
     description:
-      "Expert football predictions updated daily. 1X2, BTS, Over 1.5, Over 2.5, goal scorers, cards & corners, and VIP tips for Premier League, Champions League, La Liga, Serie A and 50+ leagues.",
+      "Expert football predictions updated daily. 1X2, BTS, Over 2.5, Halftime, goal scorers, cards & corners, and VIP tips for Premier League, Champions League, La Liga, Serie A and 50+ leagues.",
     images: [
       {
         url: "/api/og",
@@ -66,12 +66,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "LitreGre Prediction – Free Daily Football Predictions",
     description:
-      "Expert football predictions updated daily. 1X2, BTS, Over 1.5, Over 2.5, VIP tips for 50+ leagues.",
+      "Expert football predictions updated daily. 1X2, BTS, Over 2.5, VIP tips for 50+ leagues.",
     images: ["/api/og"],
   },
   robots: { index: true, follow: true },
   other: {
-    "theme-color": "#1d4ed8",
+    "theme-color": "#0f766e",
     "apple-mobile-web-app-title": "LitreGre",
   },
 };
@@ -79,7 +79,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${beVietnamPro.variable} font-sans antialiased`}>
+      <body
+        className={`${sourceSans.variable} ${barlowCondensed.variable} font-sans antialiased`}
+      >
         <ThemeProvider>
           <QueryProvider>
             <AuthProvider>
@@ -88,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 position="top-right"
                 toastOptions={{
                   duration: 4000,
-                  style: { borderRadius: "8px", padding: "12px 16px" },
+                  style: { borderRadius: "10px", padding: "12px 16px" },
                 }}
               />
             </AuthProvider>

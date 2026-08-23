@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Star, RefreshCw } from "lucide-react";
 import dayjs from "dayjs";
 import type { VIPPrediction } from "@/components/predictions/VIPPredictionCard";
+import { buildSimulationHref } from "@/lib/simulation";
 
 // The bet_of_day API has no defined schema — it may return a single object,
 // an array, or a paginated response. We handle all cases below.
@@ -320,10 +321,21 @@ export default function BetOfTheDayPage() {
           </div>
 
           {/* CTA */}
-          <div className="p-4 border-t border-base-300">
+          <div className="p-4 border-t border-base-300 space-y-2">
+            <Link
+              href={buildSimulationHref({
+                home: bet.home,
+                away: bet.away,
+                homeLogo: bet.homeLogo,
+                awayLogo: bet.awayLogo,
+              })}
+              className="btn btn-primary w-full gap-2"
+            >
+              Simulate match →
+            </Link>
             <Link
               href="/predictions/accumulator-tips"
-              className="btn btn-primary w-full"
+              className="btn btn-ghost btn-sm w-full"
             >
               View Accumulator Tips →
             </Link>

@@ -9,12 +9,12 @@ import {
   ChevronDown,
   ChevronRight,
   LogIn,
-  Trophy,
   User,
   LogOut,
   Home,
   Crown,
 } from "lucide-react";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 interface NavChild {
   label: string;
@@ -78,12 +78,7 @@ export default function MobileMenu({ open, onClose, navLinks, session }: Props) 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-base-300">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
-              <Trophy size={15} className="text-white" />
-            </div>
-            <span className="font-display font-bold text-lg">
-              Eagle<span className="text-secondary">Predict</span>
-            </span>
+            <BrandLogo href="/" size="sm" />
           </div>
           <button onClick={onClose} className="btn btn-ghost btn-sm btn-circle">
             <X size={20} />

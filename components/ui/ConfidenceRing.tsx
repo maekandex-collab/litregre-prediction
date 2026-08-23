@@ -7,6 +7,7 @@ interface Props {
   size?: number;
   strokeWidth?: number;
   label?: string;
+  light?: boolean;
 }
 
 export default function ConfidenceRing({
@@ -14,6 +15,7 @@ export default function ConfidenceRing({
   size = 64,
   strokeWidth = 5,
   label,
+  light,
 }: Props) {
   const [offset, setOffset] = useState(0);
   const mounted = useRef(false);
@@ -43,7 +45,7 @@ export default function ConfidenceRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          className="stroke-base-300"
+          className={light ? "stroke-white/20" : "stroke-base-300"}
           strokeWidth={strokeWidth}
         />
         <circle
@@ -59,7 +61,9 @@ export default function ConfidenceRing({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-xs font-bold">{pct}%</span>
+        <span className={`text-xs font-bold ${light ? "text-white" : ""}`}>
+          {pct}%
+        </span>
         {label && (
           <span className="text-[8px] text-base-content/50">{label}</span>
         )}

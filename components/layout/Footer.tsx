@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Trophy, Twitter, Facebook, Instagram, Youtube, ChevronRight } from "lucide-react";
+import { Twitter, Facebook, Instagram, Youtube, ChevronRight } from "lucide-react";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 const FOOTER_PREDICTIONS = [
   { label: "General Predictions", href: "/" },
@@ -27,7 +28,7 @@ export default function Footer() {
   return (
     <footer className="bg-neutral text-neutral-content mt-8">
       {/* Divider accent */}
-      <div className="h-1 bg-gradient-to-r from-primary via-amber-400 to-primary" />
+      <div className="h-1 bg-gradient-to-r from-teal-800 via-lime-400 to-teal-700" />
 
       {/* Main body */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,14 +36,9 @@ export default function Footer() {
 
           {/* ── Brand col (wider) ── */}
           <div className="md:col-span-5">
-            <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
-                <Trophy size={19} className="text-white" />
-              </div>
-              <span className="font-bold text-xl tracking-tight">
-                LitreGre<span className="text-amber-400"> Prediction</span>
-              </span>
-            </Link>
+            <div className="mb-4">
+              <BrandLogo inverted size="lg" />
+            </div>
 
             <p className="text-sm text-neutral-content/60 leading-relaxed mb-5 max-w-xs">
               Free daily football predictions. Sign up to unlock VIP tips,

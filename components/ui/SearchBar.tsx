@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search, X } from "lucide-react";
 
 interface SearchBarProps {
@@ -18,15 +18,23 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [value, setValue] = useState(initialValue);
   const [debounced, setDebounced] = useState(initialValue);
+  const onSearchRef = useRef(onSearch);
+  onSearchRef.current = onSearch;
+  const lastSent = useRef<string | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setDebounced(value.trim()), debounceMs);
     return () => clearTimeout(t);
   }, [value, debounceMs]);
 
+  // Only notify when the debounced query actually changes — not when the
+  // parent re-renders with a new onSearch function identity (that was
+  // resetting pagination back to page 1 on every page click).
   useEffect(() => {
-    onSearch(debounced);
-  }, [debounced, onSearch]);
+    if (lastSent.current === debounced) return;
+    lastSent.current = debounced;
+    onSearchRef.current(debounced);
+  }, [debounced]);
 
   return (
     <div className="relative">

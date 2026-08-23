@@ -1,4 +1,11 @@
-import dayjs from "dayjs";
+import Link from "next/link";
+import { Play } from "lucide-react";
+import { buildSimulationHref } from "@/lib/simulation";
+import AddToSlipButton from "@/components/slip/AddToSlipButton";
+import {
+  getKickoffStatus,
+  parsePredictionKickoff,
+} from "@/lib/predictionKickoff";
 
 export interface VIPPrediction {
   match_id: string;
@@ -55,9 +62,19 @@ interface Props {
 }
 
 export default function VIPPredictionCard({ prediction }: Props) {
-  const kickoff = prediction.kickoff ? dayjs(prediction.kickoff) : null;
+  const kickoff = parsePredictionKickoff(prediction);
   const timeStr = kickoff?.isValid() ? kickoff.format("HH:mm") : "--:--";
   const dateStr = kickoff?.isValid() ? kickoff.format("MMM D") : "";
+  const status = getKickoffStatus({
+    kickoff,
+    status: prediction.status,
+  });
+  const simulateHref = buildSimulationHref({
+    home: prediction.home_name,
+    away: prediction.away_name,
+    homeLogo: prediction.home_logo,
+    awayLogo: prediction.away_logo,
+  });
 
   return (
     <div className="card-animate gradient-border border border-base-300 rounded-xl overflow-hidden mb-3 bg-base-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 group">
@@ -70,13 +87,18 @@ export default function VIPPredictionCard({ prediction }: Props) {
         <span className="text-[10px] text-base-content/50">
           {prediction.competition_country}
         </span>
-        <span className="ml-auto text-[10px] text-base-content/50">
+        <span
+          className={`ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded ${status.tone}`}
+        >
+          {status.label}
+        </span>
+        <span className="text-[10px] text-base-content/50">
           {dateStr} {timeStr}
         </span>
       </div>
 
       {/* Match row */}
-      <div className="flex items-center gap-3 px-3 py-3">
+      <Link href={simulateHref} className="flex items-center gap-3 px-3 py-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           <TeamLogo src={prediction.home_logo} alt={prediction.home_name} />
           <span className="text-xs font-bold truncate">{prediction.home_name}</span>
@@ -92,11 +114,11 @@ export default function VIPPredictionCard({ prediction }: Props) {
           </span>
           <TeamLogo src={prediction.away_logo} alt={prediction.away_name} />
         </div>
-      </div>
+      </Link>
 
       {/* Prediction row */}
       <div className="flex items-center gap-2 px-3 pb-3">
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <p className="text-[10px] text-base-content/40 uppercase tracking-wide mb-0.5">
             Tip
           </p>
@@ -117,11 +139,22 @@ export default function VIPPredictionCard({ prediction }: Props) {
           </span>
         </div>
 
-        <div className="text-center">
-          <p className="text-[10px] text-base-content/40 mb-0.5">Status</p>
-          <span className="text-[10px] font-semibold text-base-content/60 capitalize">
-            {prediction.status}
-          </span>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <AddToSlipButton
+            compact
+            home={prediction.home_name}
+            away={prediction.away_name}
+            tip={String(prediction.label)}
+            kickoff={prediction.kickoff}
+            source="vip"
+          />
+          <Link
+            href={simulateHref}
+            className="btn btn-ghost btn-xs gap-1 rounded-full px-2.5"
+            title="Simulate this match"
+          >
+            <Play size={10} /> Sim
+          </Link>
         </div>
       </div>
     </div>
