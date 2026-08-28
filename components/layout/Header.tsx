@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import MobileMenu from "./MobileMenu";
 import { signOutSameOrigin } from "@/lib/authClient";
-import BrandLogo from "@/components/brand/BrandLogo";
+import BrandLogo, { BrandMark } from "@/components/brand/BrandLogo";
 
 const NAV_LINKS = [
   {
@@ -89,15 +89,24 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0A1433]/95 backdrop-blur-xl text-white shadow-lg shadow-black/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <span className="hidden sm:inline-flex">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full">
+          <div className="flex items-center justify-between gap-2 h-16 min-w-0">
+            {/* Logo — mark on phones/tablets, full wordmark on large screens */}
+            <div className="flex items-center min-w-0 shrink pr-1 sm:pr-2 max-w-[46%] sm:max-w-[11rem] lg:max-w-none lg:shrink-0">
+              <span className="hidden lg:inline-flex">
                 <BrandLogo inverted size="md" product="prediction" />
               </span>
-              <Link href="/" className="sm:hidden inline-flex">
-                <BrandLogo inverted size="sm" product="prediction" showWordmark={false} />
+              <Link
+                href="/"
+                className="lg:hidden inline-flex items-center min-w-0 max-w-full py-0.5"
+                aria-label="LitreGre Prediction home"
+              >
+                <BrandMark inverted size={28} className="sm:hidden max-w-[4.25rem]" />
+                <BrandMark
+                  inverted
+                  size={32}
+                  className="hidden sm:inline lg:hidden max-w-[5rem]"
+                />
               </Link>
             </div>
 
@@ -175,7 +184,7 @@ export default function Header() {
             </nav>
 
             {/* Right side controls */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <Link
                 href="/predictions/vip"
                 className={`btn btn-sm gap-1.5 border-0 shadow-md font-bold rounded-full ${

@@ -32,8 +32,8 @@ export function BrandMark({
       alt=""
       width={w}
       height={size}
-      className={`block h-auto w-auto object-contain ${className}`}
-      style={{ height: size, width: w }}
+      className={`block h-auto w-auto max-w-full object-contain object-left ${className}`}
+      style={{ height: size, width: w, maxWidth: "100%" }}
       aria-hidden
       priority
     />
@@ -72,14 +72,14 @@ export default function BrandLogo({
   const w = Math.round(h * (asset.width / asset.height));
 
   const content = (
-    <span className={`inline-flex items-center ${className}`}>
+    <span className={`inline-flex items-center min-w-0 max-w-full ${className}`}>
       <Image
         src={asset.src}
         alt="LitreGre Prediction"
         width={w}
         height={h}
-        className="block h-auto w-auto max-w-none object-contain object-left"
-        style={{ height: h, width: w }}
+        className="block max-h-full max-w-full w-auto h-auto object-contain object-left"
+        style={{ height: h, maxWidth: w }}
         priority
       />
     </span>
@@ -87,7 +87,10 @@ export default function BrandLogo({
 
   if (!href) return content;
   return (
-    <Link href={href} className="flex-shrink-0 hover:opacity-90 transition-opacity">
+    <Link
+      href={href}
+      className="flex-shrink-0 min-w-0 max-w-full hover:opacity-90 transition-opacity"
+    >
       {content}
     </Link>
   );
