@@ -9,10 +9,22 @@ import {
 
 function formatSpecialTip(
   raw: unknown,
-  opts?: { home?: string; away?: string; market?: string }
+  opts?: { home?: string; away?: string; market?: string; averageScore?: string | number }
 ): string | null {
   if (raw == null || raw === "") return null;
   const s = String(raw).trim();
+  const market = (opts?.market || "").toLowerCase();
+
+  if (market === "basketball_over") {
+    const line = opts?.averageScore != null ? String(opts.averageScore).trim() : "";
+    if (/^over$/i.test(s) || (/over/i.test(s) && !/under/i.test(s))) {
+      return line ? `Over ${line} pts` : "Over";
+    }
+    if (/^under$/i.test(s) || /under/i.test(s)) {
+      return line ? `Under ${line} pts` : "Under";
+    }
+  }
+
   if (/over[_\s]*1\.?5/i.test(s)) {
     return /no|under/i.test(s) && !/yes/i.test(s) ? "Under 1.5" : "Over 1.5";
   }
@@ -21,7 +33,6 @@ function formatSpecialTip(
   }
 
   // Basketball / tennis API only returns match-winner 1|2 (no O/U tip)
-  const market = (opts?.market || "").toLowerCase();
   const isOtherSport =
     market === "basketball" || market === "tennis" || market === "mma";
   if (isOtherSport || /^[12]$/.test(s)) {
@@ -40,6 +51,7 @@ function formatSpecialTip(
 
 function avgScoreLabel(market?: string): string {
   const m = (market || "").toLowerCase();
+  if (m === "basketball_over") return "O/U line";
   if (m === "basketball") return "Avg total pts";
   if (m === "tennis") return "Avg games";
   return "Avg score";
@@ -113,13 +125,20 @@ export default function SpecialPredictionCard({ prediction }: Props) {
     typeof prediction.market_type === "string" ? prediction.market_type : "";
   const tip =
     prediction.label ||
-    formatSpecialTip(prediction.prediction, { home, away, market }) ||
+    formatSpecialTip(prediction.prediction, {
+      home,
+      away,
+      market,
+      averageScore: prediction.average_score,
+    }) ||
     (market === "over_15"
       ? "Over 1.5"
       : market === "over_25"
         ? "Over 2.5"
         : market === "btts"
           ? "BTTS Yes"
+          : market === "basketball_over"
+            ? "O/U"
           : market === "1x2"
             ? "1"
             : "—");
@@ -159,7 +178,7 @@ export default function SpecialPredictionCard({ prediction }: Props) {
   if (prediction.Prediction_outcome) extraStats.push({ label: "Method", value: prediction.Prediction_outcome });
 
   const isMMA = !!prediction.fighter_1;
-  const isOtherSport =
+  const isWinnerMarket =
     market === "basketball" || market === "tennis" || market === "mma" || isMMA;
   const simulateHref = buildSimulationHref({
     home,
@@ -237,7 +256,7 @@ export default function SpecialPredictionCard({ prediction }: Props) {
           {/* Tip */}
           <div className="flex items-center gap-1.5 min-w-0 flex-1">
             <span className="text-[9px] text-base-content/40 uppercase font-semibold flex-shrink-0">
-              {isOtherSport ? "Winner" : "Tip"}
+              {isWinnerMarket ? "Winner" : "Tip"}
             </span>
             <span className="bg-secondary text-white text-[10px] font-bold px-2 py-0.5 rounded-md truncate max-w-[180px] sm:max-w-[240px]">
               {tip}

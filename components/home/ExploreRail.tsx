@@ -17,8 +17,8 @@ const LINKS = [
     blurb: "BTTS, Over 2.5, cards & more",
     href: "/predictions/special",
     icon: Zap,
-    accent: "border-teal-400/40 bg-teal-50/80 hover:border-teal-600",
-    iconCls: "text-teal-800 bg-teal-200/50",
+    accent: "border-[#22D366]/40 bg-[#22D366]/10 hover:border-[#22D366]",
+    iconCls: "text-[#0A1433] bg-[#22D366]/25",
   },
   {
     label: "Accumulators",

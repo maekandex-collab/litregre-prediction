@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
           justifyContent: "center",
           alignItems: "flex-start",
           padding: "80px",
-          background: "linear-gradient(135deg, #071a1f 0%, #0f766e 55%, #14532d 100%)",
+          background: "linear-gradient(135deg, #0A1433 0%, #0f2a1f 55%, #14532d 100%)",
           fontFamily: "sans-serif",
           position: "relative",
         }}
@@ -61,11 +61,11 @@ export async function GET(req: NextRequest) {
               width: "56px",
               height: "56px",
               borderRadius: "14px",
-              background: "linear-gradient(135deg, #2563eb, #0f2744)",
+              background: "linear-gradient(135deg, #22D366, #0A1433)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              border: "2px solid rgba(255,255,255,0.2)",
+              border: "2px solid rgba(124, 255, 48, 0.4)",
             }}
           >
             <span style={{ fontSize: "22px", fontWeight: 800, color: "white" }}>LG</span>

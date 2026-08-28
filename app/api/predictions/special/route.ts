@@ -24,12 +24,13 @@ export async function GET(req: Request) {
   if (search) pageQs.set("search", search);
 
   try {
-    // Over 1.5 lives at /api/special/prediction/over_15 (path),
-    // not ?market_type=over_15 (that returns "Invalid market type").
+    // Path-based special markets (not ?market_type=...)
     let upstream: string;
+    const q = pageQs.toString();
     if (marketType === "over_15") {
-      const q = pageQs.toString();
       upstream = `${BASE_URL}/api/special/prediction/over_15${q ? `?${q}` : ""}`;
+    } else if (marketType === "basketball_over") {
+      upstream = `${BASE_URL}/api/special/prediction/basketball_over${q ? `?${q}` : ""}`;
     } else {
       if (marketType) pageQs.set("market_type", marketType);
       upstream = `${BASE_URL}/api/special/prediction/?${pageQs.toString()}`;

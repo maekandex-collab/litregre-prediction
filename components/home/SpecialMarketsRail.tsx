@@ -9,7 +9,8 @@ const MARKETS = [
   { label: "Over 1.5", hint: "Goals", tab: "over_15" },
   { label: "Over 2.5", hint: "Goals", tab: "over_25" },
   { label: "Halftime", hint: "1st half", tab: "halftime" },
-  { label: "Basketball", hint: "Other", tab: "basketball" },
+  { label: "Basketball", hint: "Winner", tab: "basketball" },
+  { label: "BB O/U", hint: "Total pts", tab: "basketball_over" },
   { label: "Tennis", hint: "Other", tab: "tennis" },
 ] as const;
 

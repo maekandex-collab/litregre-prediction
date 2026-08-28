@@ -29,7 +29,7 @@ const SLIDES: SlideData[] = [
     href: "/",
     icon: <Trophy size={24} />,
     bgIcon: <Trophy size={140} />,
-    gradient: "from-[#042f2e] via-[#0f766e] to-[#134e4a]",
+    gradient: "from-[#0A1433] via-[#0f2a1f] to-[#14532d]",
     badges: ["Expert Analysis", "Daily Updates"],
   },
   {
@@ -51,7 +51,7 @@ const SLIDES: SlideData[] = [
     href: "/predictions/special",
     icon: <Zap size={24} />,
     bgIcon: <Zap size={140} />,
-    gradient: "from-[#14532d] via-[#15803d] to-[#0f766e]",
+    gradient: "from-[#0A1433] via-[#14532d] to-[#22D366]",
     badges: ["BTTS", "Over 2.5", "Basketball"],
   },
   {
@@ -62,7 +62,7 @@ const SLIDES: SlideData[] = [
     href: "/predictions/accumulator-tips",
     icon: <TrendingUp size={24} />,
     bgIcon: <Target size={140} />,
-    gradient: "from-[#0c4a6e] via-[#0369a1] to-[#0f766e]",
+    gradient: "from-[#0A1433] via-[#122040] to-[#22D366]",
     badges: ["Combined Odds", "Best Pick"],
   },
 ];
@@ -137,7 +137,7 @@ export default function HeroSwiper() {
                   {/* Title */}
                   <h2 className="text-white font-display font-bold text-2xl sm:text-3xl lg:text-[2.15rem] mb-1.5 leading-[1.05] tracking-wide uppercase">
                     {slide.title}{" "}
-                    <span className="text-lime-300 normal-case tracking-normal">
+                    <span className="text-[#7CFF30] normal-case tracking-normal">
                       {slide.highlight}
                     </span>
                   </h2>
@@ -150,7 +150,7 @@ export default function HeroSwiper() {
                   {/* CTA */}
                   <Link
                     href={slide.href}
-                    className="group inline-flex items-center gap-2 bg-white text-teal-950 text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:bg-lime-300"
+                    className="group inline-flex items-center gap-2 bg-white text-[#0A1433] text-sm font-semibold px-5 py-2.5 rounded-lg transition-all duration-200 hover:bg-[#7CFF30]"
                   >
                     {slide.cta}
                     <ChevronRight size={14} className="transition-transform group-hover:translate-x-0.5" />

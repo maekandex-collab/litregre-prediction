@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Barlow_Condensed } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 
-const sourceSans = Source_Sans_3({
+const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-body",
   display: "swap",
 });
 
-const barlowCondensed = Barlow_Condensed({
+const poppinsDisplay = Poppins({
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["600", "700", "800"],
   variable: "--font-display",
   display: "swap",
 });
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   },
   robots: { index: true, follow: true },
   other: {
-    "theme-color": "#0f766e",
+    "theme-color": "#22D366",
     "apple-mobile-web-app-title": "LitreGre",
   },
 };
@@ -80,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${sourceSans.variable} ${barlowCondensed.variable} font-sans antialiased`}
+        className={`${poppins.variable} ${poppinsDisplay.variable} font-sans antialiased`}
       >
         <ThemeProvider>
           <QueryProvider>

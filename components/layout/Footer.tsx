@@ -28,7 +28,7 @@ export default function Footer() {
   return (
     <footer className="bg-neutral text-neutral-content mt-8">
       {/* Divider accent */}
-      <div className="h-1 bg-gradient-to-r from-teal-800 via-lime-400 to-teal-700" />
+      <div className="h-1 bg-gradient-to-r from-[#0A1433] via-[#22D366] to-[#7CFF30]" />
 
       {/* Main body */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -37,7 +37,7 @@ export default function Footer() {
           {/* ── Brand col (wider) ── */}
           <div className="md:col-span-5">
             <div className="mb-4">
-              <BrandLogo inverted size="lg" />
+              <BrandLogo inverted size="lg" product="prediction" />
             </div>
 
             <p className="text-sm text-neutral-content/60 leading-relaxed mb-5 max-w-xs">

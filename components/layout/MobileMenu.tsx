@@ -78,7 +78,7 @@ export default function MobileMenu({ open, onClose, navLinks, session }: Props) 
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-base-300">
           <div className="flex items-center gap-2">
-            <BrandLogo href="/" size="sm" />
+            <BrandLogo href="/" size="sm" product="prediction" />
           </div>
           <button onClick={onClose} className="btn btn-ghost btn-sm btn-circle">
             <X size={20} />

@@ -67,7 +67,7 @@ function TeamFace({
             unoptimized
           />
         ) : (
-          <span className="text-xl font-display font-bold text-lime-300">
+          <span className="text-xl font-display font-bold text-[#7CFF30]">
             {team.name.slice(0, 1)}
           </span>
         )}
@@ -105,11 +105,11 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
   if (variant === "hero") {
     return (
       <section className="relative mb-6 overflow-hidden rounded-3xl border border-base-300/60 shadow-xl potd-hero">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,rgba(163,230,53,0.18),transparent_55%),radial-gradient(ellipse_at_90%_10%,rgba(13,148,136,0.35),transparent_50%),linear-gradient(145deg,#071a1f_0%,#0f3d3a_48%,#0b1f2a_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_20%,rgba(163,230,53,0.18),transparent_55%),radial-gradient(ellipse_at_90%_10%,rgba(34,211,102,0.28),transparent_50%),linear-gradient(145deg,#0A1433_0%,#0f2a1f_48%,#122040_100%)]" />
         <div className="absolute inset-0 opacity-[0.07] potd-grid" />
         <div className="relative z-10 p-5 sm:p-7 lg:p-8">
           <div className="flex flex-wrap items-center gap-2 mb-5">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-lime-400/15 border border-lime-300/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-lime-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[#22D366]/15 border border-[#7CFF30]/30 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#7CFF30]">
               <Flame size={12} className="animate-pulse" />
               Prediction of the Day
             </span>
@@ -144,7 +144,7 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
           {!loading && bet && (
             <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-8 items-center">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-teal-200/80 mb-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#7CFF30]/80 mb-3">
                   {competitionName}
                   {kickoff?.isValid()
                     ? ` · ${kickoff.format("ddd D MMM · HH:mm")}`
@@ -157,7 +157,7 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
                       VS
                     </span>
                     <div className="w-10 h-10 rounded-full border border-white/20 bg-white/5 flex items-center justify-center">
-                      <span className="font-display text-lg font-bold text-lime-300">
+                      <span className="font-display text-lg font-bold text-[#7CFF30]">
                         ×
                       </span>
                     </div>
@@ -169,7 +169,7 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
               <div className="rounded-2xl bg-white/8 border border-white/12 backdrop-blur-md p-5 sm:p-6 shadow-2xl">
                 <div className="flex items-start gap-4">
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] uppercase tracking-wider text-teal-100/60 mb-1">
+                    <p className="text-[10px] uppercase tracking-wider text-white/60 mb-1">
                       Our pick
                     </p>
                     <p className="font-display text-2xl sm:text-3xl font-bold text-white leading-tight mb-3">
@@ -178,7 +178,7 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
                     <div className="flex flex-wrap gap-4 text-sm">
                       <div>
                         <p className="text-[10px] text-white/45 uppercase">Odds</p>
-                        <p className="font-mono font-bold text-lime-300 text-lg">
+                        <p className="font-mono font-bold text-[#7CFF30] text-lg">
                           {oddsDisplay}
                         </p>
                       </div>
@@ -187,7 +187,7 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
                         <p
                           className={`font-bold capitalize ${
                             confidenceTier === "high"
-                              ? "text-lime-300"
+                              ? "text-[#7CFF30]"
                               : confidenceTier === "medium"
                                 ? "text-amber-300"
                                 : "text-white"
@@ -228,7 +228,7 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
                   )}
                   <Link
                     href="/predictions/bet-of-the-day"
-                    className="btn btn-sm btn-ghost text-lime-300 gap-1 hover:bg-white/10"
+                    className="btn btn-sm btn-ghost text-[#7CFF30] gap-1 hover:bg-white/10"
                   >
                     Full card <ArrowRight size={14} />
                   </Link>
@@ -244,8 +244,8 @@ export default function PredictionOfTheDay({ variant = "sidebar" }: Props) {
   /* ── compact sidebar variant ── */
   return (
     <div className="bg-base-100 border border-base-300 rounded-2xl overflow-hidden shadow-sm card-animate group">
-      <div className="bg-gradient-to-r from-teal-900 to-teal-700 text-white px-4 py-3 flex items-center gap-2">
-        <Flame size={16} className="text-lime-300" />
+      <div className="bg-gradient-to-r from-[#0A1433] to-[#14532d] text-white px-4 py-3 flex items-center gap-2">
+        <Flame size={16} className="text-[#7CFF30]" />
         <span className="font-display font-bold text-sm">Prediction of the Day</span>
         {isLive && (
           <span className="ml-auto flex items-center gap-1">

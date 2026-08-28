@@ -56,7 +56,7 @@ export default function AddToSlipButton({
   const tone = already
     ? "btn-success"
     : bright
-      ? "bg-lime-300 hover:bg-lime-200 text-teal-950 border-0"
+      ? "bg-[#7CFF30] hover:bg-[#22D366] text-[#0A1433] border-0"
       : "btn-primary";
 
   if (compact) {

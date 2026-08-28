@@ -140,7 +140,7 @@ export default function AccumulatorPage() {
             <div className="bg-base-100 border border-base-300 rounded-2xl flex flex-col items-center justify-center py-16 px-6 text-center">
               <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
                 <Lock size={24} className="text-primary" />
-              </div>
+                  </div>
               <h2 className="font-bold text-lg mb-2">Members Only</h2>
               <p className="text-sm text-base-content/55 max-w-sm mb-5">
                 Accumulator tips are available to registered users. Sign in to
@@ -153,8 +153,8 @@ export default function AccumulatorPage() {
                 <Link href="/signup?invite=1" className="btn btn-outline btn-primary">
                   Create Account
                 </Link>
-              </div>
-            </div>
+                  </div>
+                  </div>
           )}
 
           {/* Logged in */}
@@ -176,7 +176,7 @@ export default function AccumulatorPage() {
                   <p className="text-sm text-error mb-3">Your session expired. Please sign in again.</p>
                   <Link href="/login?callbackUrl=/predictions/accumulator-tips" className="btn btn-sm btn-primary">
                     Sign In Again
-                  </Link>
+                    </Link>
                 </div>
               )}
 

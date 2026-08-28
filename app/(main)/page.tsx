@@ -35,6 +35,7 @@ type SpecialMarket =
   | "over_25"
   | "halftime"
   | "basketball"
+  | "basketball_over"
   | "tennis";
 
 const PAGE_SIZE = 10;
@@ -46,6 +47,7 @@ const SPECIAL_MARKETS: { id: SpecialMarket; label: string }[] = [
   { id: "over_25", label: "Over 2.5" },
   { id: "halftime", label: "Halftime" },
   { id: "basketball", label: "Basketball" },
+  { id: "basketball_over", label: "BB O/U" },
   { id: "tennis", label: "Tennis" },
 ];
 

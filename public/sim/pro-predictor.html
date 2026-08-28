@@ -64,6 +64,9 @@
     .action-btn { padding:12px 0; border:none; border-radius:30px; font-size:16px; font-weight:700; background:linear-gradient(135deg,#4dc9f6,#6c5ce7); color:#fff; cursor:pointer; transition:transform 0.15s,opacity 0.2s; touch-action:manipulation; width:100%; flex-shrink:0; margin-top:6px; }
     .action-btn:active{ transform:scale(0.96); }
     .action-btn:disabled{ opacity:0.4; pointer-events:none; }
+    .skip-btn { display:none; margin:0 auto 8px; padding:6px 18px; border-radius:20px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.55); font-size:12px; font-weight:700; cursor:pointer; transition:background 0.2s,border-color 0.2s,color 0.2s; touch-action:manipulation; flex-shrink:0; }
+    .skip-btn:active{ transform:scale(0.96); }
+    .skip-btn:disabled{ opacity:0.35; pointer-events:none; }
     .result-overlay { position:absolute; inset:0; z-index:30; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); border-radius:24px; animation:fadeIn 0.4s ease; flex-direction:column; padding:20px; }
     .result-overlay.active { display:flex; }
     .result-box { background:rgba(20,20,40,0.9); border-radius:24px; padding:24px 20px 28px; border:1px solid rgba(255,255,255,0.06); text-align:center; max-width:300px; width:90%; box-shadow:0 16px 60px rgba(0,0,0,0.5); }
@@ -116,6 +119,7 @@
       </div>
       <div class="match-timer" id="matchTimer">⏱️ 0:00</div>
       <div class="match-status" id="matchStatus">🔴 Live</div>
+      <button type="button" class="skip-btn" id="skipBtn" title="Skip to full time">⏭ Skip to result</button>
       <div class="commentary-box" id="commentaryBox"></div>
       <div class="bet-section">
         <div class="bet-tabs" id="betTabs"></div>
@@ -205,6 +209,13 @@
       { id: 'rounds', label: 'Total Rounds', options: [{id:'over2.5',label:'Over 2.5'},{id:'under2.5',label:'Under 2.5'}] }
     ]
   };
+
+  // Real-time match length (all sports complete in ~30 seconds)
+  const SIM_DURATION_MS = 30000;
+
+  function getTimerTickMs(){
+    return Math.max(50, Math.floor(SIM_DURATION_MS / (state.maxTimer || 90)));
+  }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // STATE
@@ -318,6 +329,7 @@
   const betTabs = $('betTabs');
   const betOptions = $('betOptions');
   const actionBtn = $('actionBtn');
+  const skipBtn = $('skipBtn');
   const pointsDisplay = $('pointsDisplay');
   const correctDisplay = $('correctDisplay');
   const resultOverlay = $('resultOverlay');
@@ -361,6 +373,59 @@
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // UI HELPERS
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  function updateSkipButton(){
+    if(!skipBtn) return;
+    const show = state.isLive && !state.isFinished;
+    skipBtn.style.display = show ? 'block' : 'none';
+    skipBtn.disabled = !show;
+  }
+
+  function skipMatch(){
+    if(!state.isLive || state.isFinished) return;
+    if(skipBtn) skipBtn.disabled = true;
+
+    if(state.sport === 'soccer' && state.soccerScript){
+      const script = state.soccerScript;
+      while(script.goalIndex < script.goals.length){
+        const g = script.goals[script.goalIndex];
+        if(g.team === 'A'){
+          state.scoreA++;
+          if(g.time < 45) state.scoreA_ht++;
+        } else {
+          state.scoreB++;
+          if(g.time < 45) state.scoreB_ht++;
+        }
+        script.goalIndex++;
+      }
+      state.cornersA = script.cornersA;
+      state.cornersB = script.cornersB;
+    } else if(state.sport === 'basketball'){
+      const events = state.basketball_events || [];
+      while(state.eventIndex < events.length){
+        const evt = events[state.eventIndex];
+        if(evt.team === 'A') state.scoreA += evt.points;
+        else state.scoreB += evt.points;
+        state.eventIndex++;
+      }
+    } else if(state.sport === 'tennis'){
+      if(state.tennis_setsA < 2 && state.tennis_setsB < 2){
+        if(Math.random() < 0.5) state.tennis_setsA = 2;
+        else state.tennis_setsB = 2;
+      }
+    } else if(state.sport === 'mma'){
+      if(state.scoreA <= state.scoreB) state.scoreA = state.scoreB + 1;
+      else state.scoreB = state.scoreA + 1;
+      state.mma_finished = true;
+    }
+
+    state.timer = state.maxTimer;
+    addCommentary('⏭ Skipped to full time');
+    updateMatchUI();
+    endMatch();
+  }
+
+  if(skipBtn) skipBtn.onclick = skipMatch;
+
   function updateUI(){
     pointsDisplay.textContent = state.points;
     correctDisplay.textContent = state.correct;
@@ -632,6 +697,7 @@
     actionBtn.textContent = '⏳ Select a bet';
     actionBtn.disabled = true;
     matchStatus.textContent = '🔴 Pre-match';
+    updateSkipButton();
     saveSession();
   }
 
@@ -641,6 +707,7 @@
     state.phase = 'live';
     matchStatus.textContent = '🔴 Live';
     actionBtn.textContent = '⏳ Match in progress...';
+    updateSkipButton();
     if(state.timerInterval) clearInterval(state.timerInterval);
     state.timerInterval = setInterval(() => {
       state.timer++;
@@ -649,7 +716,7 @@
       if(state.timer >= state.maxTimer){
         endMatch();
       }
-    }, 1000);
+    }, getTimerTickMs());
 
     if(state.sport === 'soccer') simulateSoccer(opts.resume);
     else if(state.sport === 'basketball') simulateBasketball(opts.resume);
@@ -859,6 +926,7 @@
     matchStatus.textContent = '⏹️ Finished';
     actionBtn.textContent = '⏳ Match ended';
     actionBtn.disabled = true;
+    updateSkipButton();
     document.querySelectorAll('.bet-opt').forEach(el => el.classList.add('disabled'));
     saveSession();
     setTimeout(()=> showResult(), 1000);

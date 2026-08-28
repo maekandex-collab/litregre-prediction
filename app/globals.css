@@ -3,11 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
-  --font-display: "Barlow Condensed", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Poppins", "Segoe UI", system-ui, sans-serif;
+  --font-display: "Poppins", "Segoe UI", system-ui, sans-serif;
+  --lg-ink: #0A1433;
+  --lg-green: #22D366;
+  --lg-accent: #7CFF30;
   --surface-glow: radial-gradient(
     ellipse 80% 50% at 50% -20%,
-    rgba(15, 118, 110, 0.1),
+    rgba(34, 211, 102, 0.12),
     transparent 60%
   );
 }
@@ -269,4 +272,28 @@ body {
 }
 .swiper-pagination-bullet-active {
   @apply bg-primary !important;
+}
+
+/* LitreGre LG arrow — upward trajectory */
+@keyframes lgArrowRise {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-3px);
+    opacity: 0.85;
+  }
+}
+
+.lg-arrow-rise {
+  transform-origin: center;
+  animation: lgArrowRise 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-arrow-rise {
+    animation: none;
+  }
 }
