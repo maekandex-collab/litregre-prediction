@@ -22,7 +22,6 @@ import {
 import MobileMenu from "./MobileMenu";
 import { signOutSameOrigin } from "@/lib/authClient";
 import BrandLogo from "@/components/brand/BrandLogo";
-import { BrandMark } from "@/components/brand/BrandLogo";
 
 const NAV_LINKS = [
   {
@@ -89,19 +88,16 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-teal-900/40 bg-[#071a1f]/95 backdrop-blur-xl text-white shadow-lg shadow-black/10">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0A1433]/95 backdrop-blur-xl text-white shadow-lg shadow-black/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center gap-2 flex-shrink-0">
               <span className="hidden sm:inline-flex">
-                <BrandLogo inverted size="md" />
+                <BrandLogo inverted size="md" product="prediction" />
               </span>
-              <Link href="/" className="sm:hidden inline-flex items-center gap-2">
-                <BrandMark size={30} />
-                <span className="font-display font-bold text-lg tracking-tight">
-                  LG
-                </span>
+              <Link href="/" className="sm:hidden inline-flex">
+                <BrandLogo inverted size="sm" product="prediction" showWordmark={false} />
               </Link>
             </div>
 
@@ -111,7 +107,7 @@ export default function Header() {
                 href="/"
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
                   pathname === "/"
-                    ? "bg-white/12 text-lime-300"
+                    ? "bg-white/12 text-[#7CFF30]"
                     : "hover:bg-white/8 text-white/75"
                 }`}
               >
@@ -128,7 +124,7 @@ export default function Header() {
                       }
                       className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
                         pathname.startsWith(nav.href)
-                          ? "bg-white/12 text-lime-300"
+                          ? "bg-white/12 text-[#7CFF30]"
                           : "hover:bg-white/8 text-white/75"
                       }`}
                     >
@@ -167,7 +163,7 @@ export default function Header() {
                     href={nav.href}
                     className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-colors ${
                       pathname.startsWith(nav.href)
-                        ? "bg-white/12 text-lime-300"
+                        ? "bg-white/12 text-[#7CFF30]"
                         : "hover:bg-white/8 text-white/75"
                     }`}
                   >
@@ -184,8 +180,8 @@ export default function Header() {
                 href="/predictions/vip"
                 className={`btn btn-sm gap-1.5 border-0 shadow-md font-bold rounded-full ${
                   pathname.startsWith("/predictions/vip")
-                    ? "bg-lime-400 text-teal-950"
-                    : "bg-lime-300 hover:bg-lime-200 text-teal-950"
+                    ? "bg-[#7CFF30] text-[#0A1433]"
+                    : "bg-[#22D366] hover:bg-[#7CFF30] text-[#0A1433]"
                 }`}
               >
                 <Crown size={15} />
@@ -207,7 +203,7 @@ export default function Header() {
                     tabIndex={0}
                     className="btn btn-ghost btn-sm gap-2 text-white hover:bg-white/10"
                   >
-                    <div className="w-7 h-7 rounded-full bg-teal-700 flex items-center justify-center text-lime-200 text-xs font-bold ring-2 ring-lime-400/40">
+                    <div className="w-7 h-7 rounded-full bg-[#22D366] flex items-center justify-center text-[#0A1433] text-xs font-bold ring-2 ring-[#7CFF30]/50">
                       {session.user.name?.[0]?.toUpperCase() ?? "U"}
                     </div>
                     <span className="hidden sm:inline text-sm font-medium max-w-[100px] truncate">

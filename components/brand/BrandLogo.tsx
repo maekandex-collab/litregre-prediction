@@ -1,51 +1,56 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
 
-type Props = {
-  href?: string;
-  size?: "sm" | "md" | "lg";
-  /** Dark header / footer on ink backgrounds */
-  inverted?: boolean;
-  showWordmark?: boolean;
-  className?: string;
-};
+/** Processed from official litre-images assets — do not redraw in SVG. */
+const BRAND = {
+  light: { src: "/brand/logo-light.png", width: 1984, height: 453 },
+  dark: { src: "/brand/logo-dark.png", width: 1169, height: 268 },
+  mark: { src: "/brand/mark.png", width: 615, height: 426 },
+} as const;
 
-const sizes = {
-  sm: { mark: 28, text: "text-base" },
-  md: { mark: 34, text: "text-lg" },
-  lg: { mark: 40, text: "text-xl" },
-};
-
-/** Custom mark: rising odds spike — not a stock trophy. */
-export function BrandMark({
-  size = 34,
-  className = "",
-}: {
+type MarkProps = {
   size?: number;
   className?: string;
-}) {
+  inverted?: boolean;
+  animate?: boolean;
+};
+
+export function BrandMark({
+  size = 40,
+  className = "",
+}: MarkProps) {
+  const asset = BRAND.mark;
+  const w = Math.round(size * (asset.width / asset.height));
+
   return (
-    <svg
-      width={size}
+    <Image
+      src={asset.src}
+      alt=""
+      width={w}
       height={size}
-      viewBox="0 0 40 40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
+      className={`block h-auto w-auto object-contain ${className}`}
+      style={{ height: size, width: w }}
       aria-hidden
-    >
-      <rect width="40" height="40" rx="11" fill="currentColor" className="text-primary" />
-      <path
-        d="M9 27.5V22l5.2-7.2 4.1 5.4L26.5 10 31 10.8 22.2 27.5H9Z"
-        fill="#ECFDF5"
-      />
-      <path
-        d="M26.5 10l4.5.8-2.2 4.1-2.3-4.9Z"
-        fill="#A3E635"
-      />
-      <circle cx="29.5" cy="12.2" r="2.2" fill="#A3E635" />
-    </svg>
+      priority
+    />
   );
 }
+
+type Product = "prediction" | "bet";
+
+type LogoProps = {
+  href?: string | null;
+  size?: "sm" | "md" | "lg";
+  inverted?: boolean;
+  showWordmark?: boolean;
+  product?: Product;
+  className?: string;
+  animate?: boolean;
+};
+
+const heights = { sm: 32, md: 40, lg: 48 } as const;
 
 export default function BrandLogo({
   href = "/",
@@ -53,24 +58,26 @@ export default function BrandLogo({
   inverted = false,
   showWordmark = true,
   className = "",
-}: Props) {
-  const s = sizes[size];
+}: LogoProps) {
+  const h = heights[size];
+  const asset = showWordmark
+    ? inverted
+      ? BRAND.dark
+      : BRAND.light
+    : BRAND.mark;
+  const w = Math.round(h * (asset.width / asset.height));
+
   const content = (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
-      <BrandMark size={s.mark} />
-      {showWordmark && (
-        <span
-          className={`font-display font-bold tracking-wide leading-none ${s.text} ${
-            inverted ? "text-white" : "text-base-content"
-          }`}
-        >
-          LitreGre
-          <span className={inverted ? "text-lime-300" : "text-primary"}>
-            {" "}
-            Prediction
-          </span>
-        </span>
-      )}
+    <span className={`inline-flex items-center ${className}`}>
+      <Image
+        src={asset.src}
+        alt="LitreGre Prediction"
+        width={w}
+        height={h}
+        className="block h-auto w-auto max-w-none object-contain object-left"
+        style={{ height: h, width: w }}
+        priority
+      />
     </span>
   );
 
