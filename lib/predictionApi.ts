@@ -50,9 +50,10 @@ export function extractError(
   data: Record<string, unknown>,
   fallback = "Something went wrong. Please try again."
 ): string {
-  if (typeof data.detail === "string") return data.detail;
-  if (typeof data.error === "string") return data.error;
-  if (typeof data.message === "string") return data.message;
+  // Backend (Bene) uses `message` for auth errors, e.g. user does not exist → dial *7098#
+  if (typeof data.message === "string" && data.message.trim()) return data.message.trim();
+  if (typeof data.detail === "string" && data.detail.trim()) return data.detail.trim();
+  if (typeof data.error === "string" && data.error.trim()) return data.error.trim();
   // Django-style field errors: { field: ["msg"] }
   const first = Object.values(data)[0];
   if (Array.isArray(first) && typeof first[0] === "string") return first[0];

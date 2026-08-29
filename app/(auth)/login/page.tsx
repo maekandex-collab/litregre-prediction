@@ -46,19 +46,42 @@ function LoginContent() {
 
     const normalizedPhone = normalizeNigerianPhone(phone);
 
-    const result = await signIn("credentials", {
-      phone: normalizedPhone,
-      pin,
-      redirect: false,
-    });
+    try {
+      const checkRes = await fetch("/api/auth/login-check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: normalizedPhone, pin }),
+      });
+      const checkData = (await checkRes.json()) as {
+        ok?: boolean;
+        error?: string;
+      };
 
-    setLoading(false);
+      if (!checkRes.ok || !checkData.ok) {
+        setError(
+          checkData.error ??
+            "Invalid phone number or PIN. Please try again."
+        );
+        return;
+      }
 
-    if (result?.error) {
-      setError("Invalid phone number or PIN. Please try again.");
-    } else {
-      toast.success("Welcome back! 🎉");
+      const result = await signIn("credentials", {
+        phone: normalizedPhone,
+        pin,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid phone number or PIN. Please try again.");
+        return;
+      }
+
+      toast.success("Welcome back!");
       router.push(callbackUrl);
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -201,8 +224,16 @@ function LoginContent() {
           </button>
         </form>
 
-        <div className="mt-4 rounded-lg border border-base-300 bg-base-200/60 px-3 py-2 text-xs text-base-content/70">
-          Need an account? Use your invite link to open the registration page.
+        <div className="mt-4 rounded-lg border border-base-300 bg-base-200/60 px-3 py-2 text-xs text-base-content/70 space-y-1">
+          <p>
+            Not subscribed yet? Dial{" "}
+            <span className="font-semibold text-primary">*7098#</span> to
+            subscribe, then use your registration link to create a PIN.
+          </p>
+          <p>
+            Already have a link? Open it to finish registration, then sign in
+            here.
+          </p>
         </div>
       </div>
 
