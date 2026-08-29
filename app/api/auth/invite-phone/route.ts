@@ -3,7 +3,7 @@ import { normalizeNigerianPhone } from "@/lib/phone";
 
 /**
  * Invite / registration phone lookup.
- * Frontend: /signup?invite=<token>&phone=<optional>
+ * Frontend: /signup?invite=<token>&phone=<n>  or  /signup?num=234…
  *
  * When the backend invite API is ready, replace the local resolution below
  * with a call that returns { phone } for the invite token.
@@ -11,11 +11,12 @@ import { normalizeNigerianPhone } from "@/lib/phone";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const invite = (searchParams.get("invite") ?? "").trim();
-  const phoneParam = searchParams.get("phone") ?? "";
+  const phoneParam =
+    searchParams.get("phone") ?? searchParams.get("num") ?? "";
 
-  if (!invite) {
+  if (!invite && !phoneParam.trim()) {
     return NextResponse.json(
-      { ok: false, error: "Invite token is required." },
+      { ok: false, error: "Invite token or phone number is required." },
       { status: 400 }
     );
   }
@@ -46,6 +47,6 @@ export async function GET(req: Request) {
     ok: true,
     phone,
     locked: true,
-    invite,
+    invite: invite || null,
   });
 }

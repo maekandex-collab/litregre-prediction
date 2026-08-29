@@ -25,11 +25,14 @@ const BENEFITS = [
 function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const hasInviteAccess = searchParams.has("invite");
-  const phoneFromQuery = searchParams.get("phone") ?? "";
+  const phoneFromQuery =
+    (searchParams.get("phone") ?? searchParams.get("num") ?? "").trim();
+  // USSD/SMS deep links carry the number; invite token is optional when num/phone is present
+  const hasInviteAccess =
+    searchParams.has("invite") || phoneFromQuery.length > 0;
 
   const [phone, setPhone] = useState("");
-  const [phoneLocked, setPhoneLocked] = useState(Boolean(phoneFromQuery.trim()));
+  const [phoneLocked, setPhoneLocked] = useState(Boolean(phoneFromQuery));
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [showPin, setShowPin] = useState(false);
@@ -76,7 +79,7 @@ function SignupContent() {
     (async () => {
       try {
         const res = await fetch(
-          `/api/auth/invite-phone?invite=${encodeURIComponent(invite)}`
+          `/api/auth/invite-phone?invite=${encodeURIComponent(invite)}&phone=${encodeURIComponent(searchParams.get("phone") ?? searchParams.get("num") ?? "")}`
         );
         const data = (await res.json()) as { ok?: boolean; phone?: string };
         if (!cancelled && data.ok && data.phone) {
