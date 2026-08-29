@@ -24,7 +24,7 @@ const poppinsDisplay = Poppins({
 const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.NEXTAUTH_URL ||
-  "https://prediction.viaspark.site";
+  "https://www.litregreprediction.site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

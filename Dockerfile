@@ -16,10 +16,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Defaults required so `next build` prerender does not call new URL("") via NextAuth.
 # Coolify runtime env overrides these when the container starts.
 ARG PREDICTION_API_BASE_URL=https://mtn.lenhub.net
-ARG NEXTAUTH_URL=http://localhost:3000
+ARG NEXTAUTH_URL=https://www.litregreprediction.site
+ARG NEXT_PUBLIC_SITE_URL=https://www.litregreprediction.site
 ARG NEXTAUTH_SECRET=build-time-placeholder-set-real-secret-in-coolify
 ENV PREDICTION_API_BASE_URL=$PREDICTION_API_BASE_URL
 ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
 RUN npm run build
 
