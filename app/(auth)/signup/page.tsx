@@ -17,9 +17,9 @@ import { normalizeNigerianPhone } from "@/lib/phone";
 
 const BENEFITS = [
   "Phone number comes from your invite link and stays locked",
-  "Create your secure betting PIN in seconds",
-  "No need to type your number on first registration",
-  "Faster login with phone number + PIN",
+  "Create a 4–6 digit PIN to secure your account",
+  "Agree to terms, then your account is created instantly",
+  "Sign in next with phone number + PIN",
 ];
 
 function SignupContent() {
@@ -150,7 +150,9 @@ function SignupContent() {
       }
 
       toast.success("Account created! You can now sign in.");
-      router.push(`/login?verified=1&phone=${encodeURIComponent(normalizedPhone)}`);
+      router.push(
+        `/login?registered=1&phone=${encodeURIComponent(normalizedPhone)}`
+      );
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -170,7 +172,8 @@ function SignupContent() {
             Join LitreGre <span className="text-primary">Prediction</span>
           </h2>
           <p className="text-base-content/60 text-sm mb-6">
-            Open your create-PIN registration page, agree to terms, and receive a secure verification link tied to your phone number.
+            Use your invite link, set a PIN, accept the terms — your account is
+            created right away. Then sign in with phone + PIN.
           </p>
           <ul className="space-y-3">
             {BENEFITS.map((b) => (
@@ -185,7 +188,8 @@ function SignupContent() {
 
           <div className="mt-8 bg-primary/5 border border-primary/20 rounded-xl p-4">
             <p className="text-xs text-base-content/60">
-              "I signed up in under a minute with my phone and PIN. The verification link flow is clean and simple."
+              &ldquo;I signed up in under a minute with my invite link and a PIN.
+              Straight to login after that.&rdquo;
             </p>
             <p className="text-xs font-semibold mt-2">- Chinedu I., Abuja</p>
           </div>
@@ -203,7 +207,7 @@ function SignupContent() {
 
           <h2 className="hidden md:block font-bold text-xl mb-1">Create your PIN</h2>
           <p className="hidden md:block text-sm text-base-content/60 mb-5">
-            Register with your phone number and we will send a verification link.
+            Confirm your phone from the invite link, choose a PIN, and finish signup.
           </p>
 
           {/* Error */}
@@ -341,7 +345,7 @@ function SignupContent() {
                 <Link href="/privacy-policy" className="text-primary hover:underline">
                   Privacy Policy
                 </Link>
-                . I confirm I am 18+ years old and I consent to receive a verification link for registration.
+                . I confirm I am 18+ years old.
               </span>
             </label>
 
@@ -354,7 +358,7 @@ function SignupContent() {
               {loading ? (
                 <span className="loading loading-spinner loading-sm" />
               ) : (
-                "Register & Send Verification Link"
+                "Create account"
               )}
             </button>
           </form>

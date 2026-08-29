@@ -9,7 +9,9 @@ export async function GET(req: Request) {
     return NextResponse.redirect(`${origin}/login?invalidLink=1`);
   }
 
-  // Demo flow: this endpoint extracts phone from URL and marks registration verified.
-  // In production, verify token and persist user state before redirect.
-  return NextResponse.redirect(`${origin}/login?verified=1&phone=${encodeURIComponent(phone)}`);
+  // Legacy helper: account creation is POST /api/auth/register → create/user.
+  // Keep redirect for old SMS-style links that still point here.
+  return NextResponse.redirect(
+    `${origin}/login?registered=1&phone=${encodeURIComponent(phone)}`
+  );
 }

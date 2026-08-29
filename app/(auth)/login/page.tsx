@@ -12,7 +12,9 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") ?? "/";
-  const verified = searchParams.get("verified") === "1";
+  const registered =
+    searchParams.get("registered") === "1" ||
+    searchParams.get("verified") === "1";
   const phoneFromQuery = searchParams.get("phone") ?? "";
   const inviteRequired = searchParams.get("inviteRequired") === "1";
   const invalidLink = searchParams.get("invalidLink") === "1";
@@ -84,10 +86,10 @@ function LoginContent() {
           </div>
         )}
 
-        {verified && (
+        {registered && (
           <div className="alert alert-success mb-4 py-2 text-sm">
             <AlertCircle size={14} />
-            Your registration link was verified. Enter your PIN to continue.
+            Account created. Sign in with your phone number and PIN.
           </div>
         )}
 
@@ -101,7 +103,7 @@ function LoginContent() {
         {invalidLink && (
           <div className="alert alert-error mb-4 py-2 text-sm">
             <AlertCircle size={14} />
-            This verification link is invalid or expired.
+            This registration link is invalid or expired.
           </div>
         )}
 

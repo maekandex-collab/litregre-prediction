@@ -26,7 +26,7 @@ const FAQS = [
   },
   {
     q: "How do I register?",
-    a: "Open your invite or registration link. Your phone number is taken from the link and locked in — you only set a PIN to finish signup.",
+    a: "Open your invite link. Your phone number is locked from the link — set a PIN, accept the terms, and your account is created. Then sign in with phone + PIN.",
   },
 ];
 
