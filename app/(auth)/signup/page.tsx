@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Trophy,
   Eye,
   EyeOff,
   Phone,
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { normalizeNigerianPhone } from "@/lib/phone";
+import BrandLogo from "@/components/brand/BrandLogo";
 
 const BENEFITS = [
   "Phone number comes from your invite link and stays locked",
@@ -168,8 +168,8 @@ function SignupContent() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left: Benefits */}
         <div className="hidden md:flex flex-col justify-center">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mb-4">
-            <Trophy size={24} className="text-white" />
+          <div className="mb-5">
+            <BrandLogo href="/" size="lg" product="prediction" />
           </div>
           <h2 className="font-display font-bold text-3xl mb-2">
             Join LitreGre <span className="text-primary">Prediction</span>
@@ -202,13 +202,13 @@ function SignupContent() {
         <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl p-8">
           {/* Mobile logo */}
           <div className="text-center mb-5 md:hidden">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center mx-auto mb-2">
-              <Trophy size={20} className="text-white" />
+            <div className="flex justify-center mb-3">
+              <BrandLogo href="/" size="md" product="prediction" />
             </div>
-            <h1 className="font-display font-bold text-xl">Create PIN</h1>
+            <h1 className="font-display font-bold text-xl">Create account</h1>
           </div>
 
-          <h2 className="hidden md:block font-bold text-xl mb-1">Create your PIN</h2>
+          <h2 className="hidden md:block font-bold text-xl mb-1">Create account</h2>
           <p className="hidden md:block text-sm text-base-content/60 mb-5">
             Confirm your phone from the invite link, choose a PIN, and finish signup.
           </p>

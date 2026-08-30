@@ -7,8 +7,8 @@ import Link from "next/link";
 const BRAND = {
   light: { src: "/brand/logo-light.png", width: 1984, height: 453 },
   dark: { src: "/brand/logo-dark.png", width: 1984, height: 453 },
-  mark: { src: "/brand/mark.png", width: 615, height: 426 },
-  markLight: { src: "/brand/mark-light.png", width: 414, height: 170 },
+  mark: { src: "/brand/mark.png", width: 671, height: 482 },
+  markLight: { src: "/brand/mark-light.png", width: 501, height: 306 },
 } as const;
 
 type MarkProps = {
@@ -27,16 +27,21 @@ export function BrandMark({
   const w = Math.round(size * (asset.width / asset.height));
 
   return (
-    <Image
-      src={asset.src}
-      alt=""
-      width={w}
-      height={size}
-      className={`block h-auto w-auto max-w-full object-contain object-left ${className}`}
-      style={{ height: size, width: w, maxWidth: "100%" }}
-      aria-hidden
-      priority
-    />
+    <span
+      className={`inline-flex items-center overflow-visible ${className}`}
+      style={{ height: size }}
+    >
+      <Image
+        src={asset.src}
+        alt=""
+        width={w}
+        height={size}
+        className="block h-full w-auto max-w-none object-contain object-left overflow-visible"
+        style={{ height: size, width: "auto" }}
+        aria-hidden
+        priority
+      />
+    </span>
   );
 }
 
@@ -78,8 +83,8 @@ export default function BrandLogo({
         alt="LitreGre Prediction"
         width={w}
         height={h}
-        className="block max-h-full max-w-full w-auto h-auto object-contain object-left"
-        style={{ height: h, maxWidth: w }}
+        className="block max-h-full w-auto h-auto object-contain object-left overflow-visible"
+        style={{ height: h, width: "auto" }}
         priority
       />
     </span>

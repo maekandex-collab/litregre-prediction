@@ -65,11 +65,19 @@ def crop_mark(full: Image.Image, ratio: float = 0.31) -> Image.Image:
     return full.crop((0, 0, cut, h))
 
 
+def pad(img: Image.Image, px: int = 28) -> Image.Image:
+    """Keep descenders (G curve + motion streaks) off the crop edge."""
+    canvas = Image.new("RGBA", (img.width + px * 2, img.height + px * 2), (0, 0, 0, 0))
+    canvas.paste(img, (px, px), img)
+    return canvas
+
+
 def crop_identity_mark() -> Image.Image | None:
     if not IDENTITY.exists():
         return None
     im = Image.open(IDENTITY)
-    cropped = im.crop((20, 95, 580, 265))
+    # Include the full G bowl + motion streaks under the L (old crop cut them off).
+    cropped = im.crop((12, 70, 600, 330))
     return trim(remove_near_color(cropped, NAVY[:3], tol=35))
 
 
@@ -96,10 +104,10 @@ def main() -> None:
     dark = trim(to_light_ink(light))
 
     identity_mark = crop_identity_mark()
-    mark = trim(crop_mark(light))
-    mark_light = trim(to_light_ink(crop_mark(light)))
+    mark = pad(trim(crop_mark(light)))
+    mark_light = pad(trim(to_light_ink(crop_mark(light))))
     if identity_mark is not None:
-        mark_light = identity_mark
+        mark_light = pad(identity_mark)
 
     light.save(OUT / "logo-light.png", optimize=True)
     dark.save(OUT / "logo-dark.png", optimize=True)

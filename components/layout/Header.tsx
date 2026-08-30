@@ -88,24 +88,24 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0A1433]/95 backdrop-blur-xl text-white shadow-lg shadow-black/10">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between gap-2 h-16 min-w-0">
+      <header className="sticky top-0 z-50 overflow-visible border-b border-white/10 bg-[#0A1433]/95 backdrop-blur-xl text-white shadow-lg shadow-black/10">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 w-full overflow-visible">
+          <div className="flex items-center justify-between gap-2 h-16 min-w-0 overflow-visible">
             {/* Logo — mark on phones/tablets, full wordmark on large screens */}
-            <div className="flex items-center min-w-0 shrink pr-1 sm:pr-2 max-w-[46%] sm:max-w-[11rem] lg:max-w-none lg:shrink-0">
-              <span className="hidden lg:inline-flex">
+            <div className="flex items-center overflow-visible shrink-0 pr-1 sm:pr-2">
+              <span className="hidden lg:inline-flex overflow-visible">
                 <BrandLogo inverted size="md" product="prediction" />
               </span>
               <Link
                 href="/"
-                className="lg:hidden inline-flex items-center min-w-0 max-w-full py-0.5"
+                className="lg:hidden inline-flex items-center overflow-visible h-11"
                 aria-label="LitreGre Prediction home"
               >
-                <BrandMark inverted size={28} className="sm:hidden max-w-[4.25rem]" />
+                <BrandMark inverted size={40} className="sm:hidden" />
                 <BrandMark
                   inverted
-                  size={32}
-                  className="hidden sm:inline lg:hidden max-w-[5rem]"
+                  size={44}
+                  className="hidden sm:inline-flex lg:hidden"
                 />
               </Link>
             </div>
