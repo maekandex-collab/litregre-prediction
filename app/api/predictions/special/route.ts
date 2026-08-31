@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
+import { predictionAuthHeaders } from "@/lib/predictionApi";
 
 const BASE_URL =
   process.env.PREDICTION_API_BASE_URL ?? "https://mtn.lenhub.net";
@@ -37,9 +38,7 @@ export async function GET(req: Request) {
     }
 
     const res = await fetch(upstream, {
-      headers: {
-        Authorization: `Bearer ${session.user.backendToken}`,
-      },
+      headers: predictionAuthHeaders(session.user.backendToken),
       cache: "no-store",
     });
     const data = await res.json();

@@ -60,6 +60,47 @@ export function extractError(
   return fallback;
 }
 
+/**
+ * Upstream prediction routes expect Bearer AND a session cookie:
+ *   <user_id>="{\"session_id\":\"…\",\"access_token\":\"…\"}"
+ * Login sets that cookie on mtn.lenhub.net; the Next.js BFF never receives it,
+ * so rebuild from the JWT or Bearer-only calls return HTML 500 → FE 502.
+ */
+export function predictionAuthHeaders(
+  token?: string,
+  extra: Record<string, string> = {}
+): Record<string, string> {
+  if (!token) return { ...extra };
+
+  const headers: Record<string, string> = {
+    ...extra,
+    Authorization: `Bearer ${token}`,
+  };
+
+  try {
+    const parts = token.split(".");
+    if (parts.length >= 2) {
+      const b64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+      const padded = b64 + "=".repeat((4 - (b64.length % 4)) % 4);
+      const payload = JSON.parse(
+        Buffer.from(padded, "base64").toString("utf-8")
+      ) as { user_id?: string; session_id?: string };
+
+      if (payload.user_id && payload.session_id) {
+        const body = JSON.stringify({
+          session_id: payload.session_id,
+          access_token: token,
+        });
+        headers.Cookie = `${payload.user_id}=${JSON.stringify(body)}`;
+      }
+    }
+  } catch {
+    // Bearer-only fallback
+  }
+
+  return headers;
+}
+
 // ─── API Calls ───────────────────────────────────────────────────────────────
 
 /**
@@ -153,10 +194,9 @@ export async function changePassword(
 ): Promise<ApiResult<Record<string, unknown>>> {
   const res = await fetch(`${BASE_URL}/api/prediction/change/password/`, {
     method: "POST",
-    headers: {
+    headers: predictionAuthHeaders(token, {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    }),
     body: JSON.stringify(body),
   });
 
