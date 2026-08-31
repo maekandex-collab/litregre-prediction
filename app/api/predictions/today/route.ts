@@ -33,11 +33,28 @@ export async function GET(req: Request) {
         cache: "no-store",
       }
     );
-    const data = await res.json();
+    const text = await res.text();
+    let data: unknown = null;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch {
+      return NextResponse.json(
+        {
+          error: "Upstream returned non-JSON for today's predictions.",
+          status: res.status,
+          body: text.slice(0, 300),
+        },
+        { status: 502 }
+      );
+    }
     return NextResponse.json(data, { status: res.status });
-  } catch {
+  } catch (err) {
+    console.error("[predictions/today]", err);
     return NextResponse.json(
-      { error: "Failed to fetch today's predictions." },
+      {
+        error: "Failed to fetch today's predictions.",
+        detail: err instanceof Error ? err.message : String(err),
+      },
       { status: 502 }
     );
   }
