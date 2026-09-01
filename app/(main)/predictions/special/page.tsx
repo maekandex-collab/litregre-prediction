@@ -513,6 +513,12 @@ function SpecialPredictionsContent() {
               {error.message}
             </p>
           )}
+          {dailySub === "handicap" && (
+            <p className="text-xs text-base-content/50 mt-2 max-w-sm mx-auto px-4">
+              Handicap is not live on the prediction API yet. Try 1X2, BTTS, Over 2.5,
+              or Halftime.
+            </p>
+          )}
           <button onClick={() => refetch()} className="btn btn-primary btn-sm mt-4 rounded-lg">
             Try Again
           </button>

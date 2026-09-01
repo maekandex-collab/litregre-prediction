@@ -153,6 +153,7 @@ export default function HomePage() {
     data: specialData,
     isLoading: specialLoading,
     isError: specialIsError,
+    error: specialError,
     refetch: refetchSpecial,
   } = useSpecialPredictions(
     specialEndpoint,
@@ -674,9 +675,20 @@ export default function HomePage() {
 
                   {specialIsError && (
                     <div className="p-6 text-center">
-                      <p className="text-sm text-error mb-3">
+                      <p className="text-sm text-error mb-2 font-semibold">
                         Could not load special predictions.
                       </p>
+                      {specialError instanceof Error && specialError.message && (
+                        <p className="text-xs text-base-content/55 max-w-md mx-auto mb-3">
+                          {specialError.message}
+                        </p>
+                      )}
+                      {specialMarket === "handicap" && (
+                        <p className="text-xs text-base-content/50 max-w-md mx-auto mb-3">
+                          Handicap is not live on the prediction API yet. Try 1X2, BTTS,
+                          Over 2.5, or Halftime in the meantime.
+                        </p>
+                      )}
                       <button
                         onClick={() => refetchSpecial()}
                         className="btn btn-sm btn-outline btn-primary"

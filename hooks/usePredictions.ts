@@ -121,13 +121,21 @@ export function useSpecialPredictions(
       });
       if (search.trim()) qs.set("search", search.trim());
       const res = await apiFetch(`${endpoint}?${qs}`);
-      if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data: SpecialPaginatedResponse & {
         data?: SpecialPrediction[];
         items?: SpecialPrediction[];
         message?: string;
+        error?: string;
         market_type?: string[];
       } = await res.json();
+
+      if (!res.ok) {
+        const msg =
+          (typeof data.message === "string" && data.message.trim()) ||
+          (typeof data.error === "string" && data.error.trim()) ||
+          `Request failed (${res.status})`;
+        throw new Error(msg);
+      }
 
       if (data?.message === "Invalid market type") {
         throw new Error(
