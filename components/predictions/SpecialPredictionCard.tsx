@@ -25,6 +25,32 @@ function formatSpecialTip(
     }
   }
 
+  if (market === "handicap") {
+    const line = opts?.averageScore != null ? String(opts.averageScore).trim() : "";
+    if (s === "1" || /^home/i.test(s)) {
+      const name = opts?.home?.trim();
+      if (line) return `${name || "Home"} ${line.startsWith("-") || line.startsWith("+") ? line : `-${line}`}`;
+      return name ? `${name} AH` : "Home AH";
+    }
+    if (s === "2" || /^away/i.test(s)) {
+      const name = opts?.away?.trim();
+      if (line) return `${name || "Away"} ${line.startsWith("-") || line.startsWith("+") ? line : `+${line}`}`;
+      return name ? `${name} AH` : "Away AH";
+    }
+  }
+
+  if (market === "halftime") {
+    if (s === "1") {
+      const name = opts?.home?.trim();
+      return name ? `${name} HT` : "Home HT";
+    }
+    if (s === "X" || s === "x") return "Draw HT";
+    if (s === "2") {
+      const name = opts?.away?.trim();
+      return name ? `${name} HT` : "Away HT";
+    }
+  }
+
   if (/over[_\s]*1\.?5/i.test(s)) {
     return /no|under/i.test(s) && !/yes/i.test(s) ? "Under 1.5" : "Over 1.5";
   }
@@ -52,6 +78,7 @@ function formatSpecialTip(
 function avgScoreLabel(market?: string): string {
   const m = (market || "").toLowerCase();
   if (m === "basketball_over") return "O/U line";
+  if (m === "handicap") return "Handicap";
   if (m === "basketball") return "Avg total pts";
   if (m === "tennis") return "Avg games";
   return "Avg score";
@@ -139,6 +166,10 @@ export default function SpecialPredictionCard({ prediction }: Props) {
           ? "BTTS Yes"
           : market === "basketball_over"
             ? "O/U"
+          : market === "handicap"
+            ? "Handicap"
+          : market === "halftime"
+            ? "HT"
           : market === "1x2"
             ? "1"
             : "—");

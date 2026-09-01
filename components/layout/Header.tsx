@@ -54,6 +54,7 @@ const NAV_LINKS = [
       { label: "Over 1.5", href: "/predictions/special?tab=over_15" },
       { label: "Over 2.5", href: "/predictions/special?tab=over_25" },
       { label: "Halftime", href: "/predictions/special?tab=halftime" },
+      { label: "Handicap", href: "/predictions/special?tab=handicap" },
       { label: "Goal Scorers", href: "/predictions/special?tab=goal-scorers" },
       { label: "Cards & Corners", href: "/predictions/special?tab=cards-corners" },
       { label: "Basketball", href: "/predictions/special?tab=basketball" },

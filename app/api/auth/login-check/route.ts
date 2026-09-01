@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { loginUser, extractError } from "@/lib/predictionApi";
+import { loginUser, extractError, friendlyAuthError } from "@/lib/predictionApi";
 import { normalizeNigerianPhone } from "@/lib/phone";
 
 /**
@@ -37,9 +37,11 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           ok: false,
-          error: extractError(
-            result.data as Record<string, unknown>,
-            "Invalid phone number or PIN. Please try again."
+          error: friendlyAuthError(
+            extractError(
+              result.data as Record<string, unknown>,
+              "Invalid phone number or PIN. Please try again."
+            )
           ),
         },
         { status: result.status || 400 }

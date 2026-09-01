@@ -9,6 +9,7 @@ const MARKETS = [
   { label: "Over 1.5", hint: "Goals", tab: "over_15" },
   { label: "Over 2.5", hint: "Goals", tab: "over_25" },
   { label: "Halftime", hint: "1st half", tab: "halftime" },
+  { label: "Handicap", hint: "Asian HC", tab: "handicap" },
   { label: "Basketball", hint: "Winner", tab: "basketball" },
   { label: "BB O/U", hint: "Total pts", tab: "basketball_over" },
   { label: "Tennis", hint: "Other", tab: "tennis" },
@@ -42,7 +43,7 @@ export default function SpecialMarketsRail() {
       </div>
 
       <div className="p-3 sm:p-3.5">
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none sm:grid sm:grid-cols-4 lg:grid-cols-7 sm:overflow-visible sm:pb-0">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none sm:grid sm:grid-cols-4 lg:grid-cols-8 sm:overflow-visible sm:pb-0">
           {MARKETS.map((m) => (
             <Link
               key={m.tab}

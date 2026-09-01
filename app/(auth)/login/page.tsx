@@ -4,8 +4,9 @@ import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Trophy, Eye, EyeOff, Phone, Lock, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Phone, Lock, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
+import BrandLogo from "@/components/brand/BrandLogo";
 import { normalizeNigerianPhone } from "@/lib/phone";
 
 function LoginContent() {
@@ -91,8 +92,8 @@ function LoginContent() {
       <div className="bg-base-100 border border-base-300 rounded-2xl shadow-xl p-8">
         {/* Logo */}
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center mx-auto mb-3">
-            <Trophy size={24} className="text-white" />
+          <div className="flex justify-center mb-4">
+            <BrandLogo href="/" size="lg" product="prediction" />
           </div>
           <h1 className="font-display font-bold text-2xl">
             Welcome back

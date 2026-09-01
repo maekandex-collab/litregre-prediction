@@ -29,6 +29,7 @@ type DailySpecialSub =
   | "over_15"
   | "over_25"
   | "halftime"
+  | "handicap"
   | "basketball"
   | "basketball_over"
   | "tennis";
@@ -60,6 +61,7 @@ const DAILY_SPECIAL_SUB_TABS: {
   { id: "over_15", label: "Over 1.5", hint: "Goals" },
   { id: "over_25", label: "Over 2.5", hint: "Goals" },
   { id: "halftime", label: "Halftime", hint: "1st half" },
+  { id: "handicap", label: "Handicap", hint: "Asian HC" },
   { id: "basketball", label: "Basketball", hint: "Match winner" },
   { id: "basketball_over", label: "BB O/U", hint: "Total points" },
   { id: "tennis", label: "Tennis", hint: "Other sport" },
@@ -169,8 +171,19 @@ function parseTabFromQuery(tab: string | null): {
   if (tab === "basketball_over" || tab === "basketball-over" || tab === "bb_ou") {
     return { mainTab: "special", dailySub: "basketball_over" };
   }
-  if (tab === "1x2" || tab === "btts" || tab === "bts" || tab === "over_15" || tab === "over_25" || tab === "halftime") {
-    return { mainTab: "special", dailySub: tab === "bts" ? "btts" : tab };
+  if (
+    tab === "1x2" ||
+    tab === "btts" ||
+    tab === "bts" ||
+    tab === "over_15" ||
+    tab === "over_25" ||
+    tab === "halftime" ||
+    tab === "handicap" ||
+    tab === "asian-handicap"
+  ) {
+    if (tab === "bts") return { mainTab: "special", dailySub: "btts" };
+    if (tab === "asian-handicap") return { mainTab: "special", dailySub: "handicap" };
+    return { mainTab: "special", dailySub: tab };
   }
   if (tab === "over15" || tab === "over_1.5") {
     return { mainTab: "special", dailySub: "over_15" };
@@ -321,7 +334,7 @@ function SpecialPredictionsContent() {
             </div>
           </div>
           <p className="text-white/70 text-sm max-w-xl leading-relaxed">
-            Expert picks across daily special markets — 1X2, BTTS, Over 1.5, Over 2.5, Halftime, basketball winner & O/U, tennis, goal scorers, cards & corners, and MMA.
+            Expert picks across daily special markets — 1X2, BTTS, Over 1.5, Over 2.5, Halftime, Handicap, basketball winner & O/U, tennis, goal scorers, cards & corners, and MMA.
           </p>
           {mainTab === "special" && (
             <div className="mt-5 pt-4 border-t border-white/10">

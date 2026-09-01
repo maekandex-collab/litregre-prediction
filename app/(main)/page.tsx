@@ -34,6 +34,7 @@ type SpecialMarket =
   | "over_15"
   | "over_25"
   | "halftime"
+  | "handicap"
   | "basketball"
   | "basketball_over"
   | "tennis";
@@ -46,6 +47,7 @@ const SPECIAL_MARKETS: { id: SpecialMarket; label: string }[] = [
   { id: "over_15", label: "Over 1.5" },
   { id: "over_25", label: "Over 2.5" },
   { id: "halftime", label: "Halftime" },
+  { id: "handicap", label: "Handicap" },
   { id: "basketball", label: "Basketball" },
   { id: "basketball_over", label: "BB O/U" },
   { id: "tennis", label: "Tennis" },
@@ -608,7 +610,7 @@ export default function HomePage() {
               {!isLoggedIn && authStatus !== "loading" && (
                 <AuthLockScreen
                   title="Sign in for Daily Special"
-                  message="Special markets (Over 1.5, Over 2.5, BTTS, Halftime and more) are available to registered users."
+                  message="Special markets (Over 1.5, Over 2.5, BTTS, Halftime, Handicap and more) are available to registered users."
                   callbackUrl="/"
                 />
               )}

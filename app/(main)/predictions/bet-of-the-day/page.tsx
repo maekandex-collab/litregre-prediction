@@ -5,7 +5,9 @@ import Link from "next/link";
 import { Star, RefreshCw } from "lucide-react";
 import dayjs from "dayjs";
 import type { VIPPrediction } from "@/components/predictions/VIPPredictionCard";
+import MatchMarketAnalyticsPanel from "@/components/predictions/MatchMarketAnalytics";
 import { buildSimulationHref } from "@/lib/simulation";
+import { extractMatchAnalytics } from "@/lib/matchAnalytics";
 
 // The bet_of_day API has no defined schema — it may return a single object,
 // an array, or a paginated response. We handle all cases below.
@@ -206,6 +208,8 @@ export default function BetOfTheDayPage() {
         : Math.round(bet.probability * 100)
       : null;
 
+  const analytics = raw ? extractMatchAnalytics(raw) : null;
+
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
       {/* Hero */}
@@ -319,6 +323,14 @@ export default function BetOfTheDayPage() {
               </p>
             </div>
           </div>
+
+          {analytics && (
+            <MatchMarketAnalyticsPanel
+              analytics={analytics}
+              homeTeam={bet.home}
+              awayTeam={bet.away}
+            />
+          )}
 
           {/* CTA */}
           <div className="p-4 border-t border-base-300 space-y-2">

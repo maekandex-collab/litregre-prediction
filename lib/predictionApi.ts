@@ -60,6 +60,18 @@ export function extractError(
   return fallback;
 }
 
+/** Map opaque backend failures to actionable copy for login/signup forms. */
+export function friendlyAuthError(message: string): string {
+  const trimmed = message.trim();
+  if (!trimmed) return "Something went wrong. Please try again.";
+
+  if (/internal server error/i.test(trimmed)) {
+    return "Sign-in is temporarily unavailable. Please try again in a few minutes. If this continues, dial *7098# for help.";
+  }
+
+  return trimmed;
+}
+
 /**
  * Upstream prediction routes expect Bearer AND a session cookie:
  *   <user_id>="{\"session_id\":\"…\",\"access_token\":\"…\"}"
@@ -133,7 +145,7 @@ export async function loginUser(
     body: JSON.stringify(body),
   });
 
-  const data = (await res.json()) as LoginSuccessData;
+  const data = (await res.json().catch(() => ({}))) as LoginSuccessData;
   return { ok: res.ok, status: res.status, data };
 }
 

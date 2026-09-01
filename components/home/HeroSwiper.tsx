@@ -46,7 +46,7 @@ const SLIDES: SlideData[] = [
   {
     title: "Daily",
     highlight: "Special Markets",
-    subtitle: "Goal scorers, cards & corners, BTTS, Over 2.5, Halftime, basketball and tennis in one hub.",
+    subtitle: "Goal scorers, cards & corners, BTTS, Over 2.5, Halftime, Handicap, basketball and tennis in one hub.",
     cta: "Explore Daily Special",
     href: "/predictions/special",
     icon: <Zap size={24} />,
