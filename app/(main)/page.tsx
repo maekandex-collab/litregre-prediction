@@ -122,7 +122,7 @@ export default function HomePage() {
   const [specialMarket, setSpecialMarket] = useState<SpecialMarket>("over_25");
   const [specialPage, setSpecialPage] = useState(1);
   const [specialSearch, setSpecialSearch] = useState("");
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>("upcoming");
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>("all");
 
   const isLoggedIn = authStatus === "authenticated" && !!session?.user;
 
