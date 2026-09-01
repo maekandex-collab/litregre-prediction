@@ -610,7 +610,7 @@ export default function HomePage() {
               {!isLoggedIn && authStatus !== "loading" && (
                 <AuthLockScreen
                   title="Sign in for Daily Special"
-                  message="Special markets (Over 1.5, Over 2.5, BTTS, Halftime, Handicap and more) are available to registered users."
+                  message="Special markets (Over 1.5, Over 2.5, BTTS, Halftime and more) are available to registered users."
                   callbackUrl="/"
                 />
               )}

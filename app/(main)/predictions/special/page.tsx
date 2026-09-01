@@ -218,7 +218,7 @@ function SpecialPredictionsContent() {
 
   const { endpoint, params } = getEndpointAndParams(mainTab, dailySub, cardsSub, otherSportsSub);
 
-  const { data, isLoading, isError, refetch } = useSpecialPredictions(
+  const { data, isLoading, isError, error, refetch } = useSpecialPredictions(
     endpoint,
     params,
     page,
@@ -334,7 +334,7 @@ function SpecialPredictionsContent() {
             </div>
           </div>
           <p className="text-white/70 text-sm max-w-xl leading-relaxed">
-            Expert picks across daily special markets — 1X2, BTTS, Over 1.5, Over 2.5, Halftime, Handicap, basketball winner & O/U, tennis, goal scorers, cards & corners, and MMA.
+            Expert picks across daily special markets — 1X2, BTTS, Over 1.5, Over 2.5, Halftime, basketball winner & O/U, tennis, goal scorers, cards & corners, and MMA.
           </p>
           {mainTab === "special" && (
             <div className="mt-5 pt-4 border-t border-white/10">
@@ -508,6 +508,11 @@ function SpecialPredictionsContent() {
             <Zap size={20} className="text-error" />
           </div>
           <p className="text-error font-bold text-sm">Failed to load predictions</p>
+          {error instanceof Error && error.message && (
+            <p className="text-xs text-base-content/55 mt-2 max-w-sm mx-auto px-4">
+              {error.message}
+            </p>
+          )}
           <button onClick={() => refetch()} className="btn btn-primary btn-sm mt-4 rounded-lg">
             Try Again
           </button>

@@ -32,6 +32,8 @@ export async function GET(req: Request) {
       upstream = `${BASE_URL}/api/special/prediction/over_15${q ? `?${q}` : ""}`;
     } else if (marketType === "basketball_over") {
       upstream = `${BASE_URL}/api/special/prediction/basketball_over${q ? `?${q}` : ""}`;
+    } else if (marketType === "handicap") {
+      upstream = `${BASE_URL}/api/special/prediction/handicap${q ? `?${q}` : ""}`;
     } else {
       if (marketType) pageQs.set("market_type", marketType);
       upstream = `${BASE_URL}/api/special/prediction/?${pageQs.toString()}`;
@@ -41,8 +43,22 @@ export async function GET(req: Request) {
       headers: predictionAuthHeaders(session.user.backendToken),
       cache: "no-store",
     });
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
+    const raw = await res.text();
+    try {
+      const data = JSON.parse(raw) as Record<string, unknown>;
+      return NextResponse.json(data, { status: res.status });
+    } catch {
+      return NextResponse.json(
+        {
+          error: "Upstream returned a non-JSON response.",
+          message:
+            res.status === 404
+              ? "This market endpoint is not available on the API yet."
+              : "Failed to fetch special predictions.",
+        },
+        { status: res.status === 404 ? 404 : 502 }
+      );
+    }
   } catch {
     return NextResponse.json(
       { error: "Failed to fetch special predictions." },

@@ -18,7 +18,7 @@ const FAQS = [
   },
   {
     q: "What is Daily Special?",
-    a: "Daily Special covers markets like 1X2, BTTS, Over 2.5, Halftime, Handicap, plus basketball and tennis picks in one place.",
+    a: "Daily Special covers markets like 1X2, BTTS, Over 2.5, Halftime, plus basketball and tennis picks in one place.",
   },
   {
     q: "Is LitreGre affiliated with betting companies?",
